@@ -1,0 +1,6 @@
+framework module LNSideMenu {
+  umbrella header "LNSideMenu-umbrella.h"
+
+  export *
+  module * { export * }
+}

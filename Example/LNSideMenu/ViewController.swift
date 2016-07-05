@@ -1,24 +1,38 @@
 //
 //  ViewController.swift
-//  LNSideMenu
+//  LNSideMenuEffect
 //
-//  Created by Luan Nguyen on 07/04/2016.
-//  Copyright (c) 2016 Luan Nguyen. All rights reserved.
+//  Created by Luan Nguyen on 6/22/16.
+//  Copyright © 2016 Luan Nguyen. All rights reserved.
 //
 
-import UIKit
+import LNSideMenu
 
 class ViewController: UIViewController {
+  
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    // Do any additional setup after loading the view, typically from a nib.
+  }
+  
+  override func viewWillAppear(animated: Bool) {
+    super.viewWillAppear(animated)
+    self.navigationBarTranslucentStyle()
+    sideMenuManager?.sideMenuController()?.sideMenu?.isNavbarHiddenOrTranslucent = true
+  }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
+  @IBAction func toogleSideMenu(sender: AnyObject) {
+    sideMenuManager?.toggleSideMenuView()
+  }
+  
+  @IBAction func toggleRightMenu(sender: AnyObject) {
+    
+  }
+  
+  override func didReceiveMemoryWarning() {
+    super.didReceiveMemoryWarning()
+    // Dispose of any resources that can be recreated.
+  }
+  
 }
 

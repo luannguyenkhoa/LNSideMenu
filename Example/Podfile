@@ -1,11 +1,6 @@
 use_frameworks!
 
 target 'LNSideMenu_Example' do
-  pod 'LNSideMenu', :path => '../'
+  pod 'LNSideMenu', :path => ‘../‘
 
-  target 'LNSideMenu_Tests' do
-    inherit! :search_paths
-
-    
-  end
 end

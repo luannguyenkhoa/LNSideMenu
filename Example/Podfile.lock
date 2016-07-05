@@ -1,0 +1,14 @@
+PODS:
+  - LNSideMenu (0.1.0)
+
+DEPENDENCIES:
+  - LNSideMenu (from `../`)
+
+EXTERNAL SOURCES:
+  LNSideMenu:
+    :path: ../
+
+SPEC CHECKSUMS:
+  LNSideMenu: 9fd845234a314a95e80b42283ef545f851ee2d4b
+
+COCOAPODS: 0.39.0
