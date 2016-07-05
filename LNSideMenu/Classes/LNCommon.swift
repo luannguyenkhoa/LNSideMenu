@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import ObjectiveC
 
 // MARK: Global variables
 internal let screenHeight = UIScreen.mainScreen().bounds.size.height
@@ -66,13 +67,27 @@ internal protocol LNSMDelegate: class {
   func didSelectItemAtIndex(index: Int)
 }
 
+public protocol LNSideMenuManager {
+  
+  mutating func sideMenuController()-> LNSideMenuProtocol?
+  mutating func toggleSideMenuView()
+  mutating func hideSideMenuView()
+  mutating func showSideMenuView()
+  func fixSideMenuSize()
+}
+
 // MARK: Extensions
 public extension UIViewController {
   // A protocol as a store property
   public var sideMenuManager: LNSideMenuManager? {
-    get { return LNSideMenuManagement(viewController: self) }
-    set {}
+    get {
+      return associatedObject(self, key: &AssociatedKeys.LNSideMenuManagerAssociatedKey) {
+        return Associated<LNSideMenuManager>(LNSideMenuManagement(viewController: self))
+      }
+    }
+    set { }
   }
+  
   // MARK: Navigation bar translucent style
   public func navigationBarTranslucentStyle() {
     navigationBarEffect |> true
@@ -87,6 +102,51 @@ public extension UIViewController {
     navigationController?.navigationBar.setBackgroundImage(UIImage(), forBarPosition: .Top, barMetrics: .Default)
     navigationController?.navigationBar.shadowImage = UIImage()
   }
+}
+
+// MARK: Associatation
+internal final class Associated<T>: NSObject, NSCopying {
+  internal typealias Type = T
+  internal let value: Type
+  
+  internal init(_ value: Type) { self.value = value }
+  
+  internal func copyWithZone(zone: NSZone) -> AnyObject {
+    return self.dynamicType.init(value)
+  }
+}
+
+extension Associated where T: NSCopying {
+  internal func copyWithZone(zone: NSZone) -> AnyObject {
+    return self.dynamicType.init(value.copyWithZone(zone) as! Type)
+  }
+}
+
+private struct AssociatedKeys {
+  static var LNSideMenuManagerAssociatedKey = "LNSideMenuManagerAssociatedKey"
+}
+
+private func associatedObject<ValueType: Associated<LNSideMenuManager>>(
+  base: AnyObject,
+  key: UnsafePointer<String>,
+  initialiser: () -> ValueType)
+  -> LNSideMenuManager? {
+    if let associated = objc_getAssociatedObject(base, key)
+      as? ValueType {
+      return associated.value
+    }
+    let associated = initialiser()
+    objc_setAssociatedObject(base, key, associated,
+                             .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+    return associated.value
+}
+
+private func associateObject<ValueType: Associated<LNSideMenuManager>>(
+  base: AnyObject,
+  key: UnsafePointer<UInt8>,
+  value: ValueType) {
+  objc_setAssociatedObject(base, key, value,
+                           .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
 }
 
 // MARK: Operator overloading
@@ -143,9 +203,6 @@ internal func |><A, B, C, D, E, F, G, H, I> (f: (A, B, C, D, E, F, G, H, I)->(),
 internal func |><A, B, C, D, E, F, G, H, I, J> (f: (A, B, C, D, E, F, G, H, I, J)->(), arg: (A, B, C, D, E, F, G, H, I, J)){
   f(arg.0, arg.1, arg.2, arg.3, arg.4, arg.5, arg.6, arg.7, arg.8, arg.9)
 }
-
-
-
 
 
 

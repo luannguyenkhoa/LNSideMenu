@@ -8,15 +8,6 @@
 
 import UIKit
 
-public protocol LNSideMenuManager {
-  
-  func sideMenuController() -> LNSideMenuProtocol?
-  func toggleSideMenuView()
-  func hideSideMenuView()
-  func showSideMenuView()
-  func fixSideMenuSize()
-}
-
 public struct LNSideMenuManagement: LNSideMenuManager {
   
   var viewController: UIViewController?
@@ -24,31 +15,40 @@ public struct LNSideMenuManagement: LNSideMenuManager {
     self.viewController = viewController
   }
   
+  // Lazy property
+  private lazy var lazySideMenuController: LNSideMenuProtocol? = {
+    return self.getSideMenuController()
+  }()
+  
+  mutating public func sideMenuController() -> LNSideMenuProtocol? {
+    return self.lazySideMenuController
+  }
+  
   /**
    Changes current state of side menu view
    */
-  public func toggleSideMenuView() {
-    sideMenuController()?.sideMenu?.toggleMenu()
+  public mutating func toggleSideMenuView() {
+    lazySideMenuController?.sideMenu?.toggleMenu()
   }
   /**
    Hides the side menu view
    */
-  public func hideSideMenuView() {
-    sideMenuController()?.sideMenu?.hideSideMenu()
+  public mutating func hideSideMenuView() {
+    lazySideMenuController?.sideMenu?.hideSideMenu()
   }
   /**
    Shows the side menu view
    */
-  public func showSideMenuView() {
-    sideMenuController()?.sideMenu?.showSideMenu()
+  public mutating func showSideMenuView() {
+    lazySideMenuController?.sideMenu?.showSideMenu()
   }
   /**
-   REturns a Bool value indicating whether the side menu is showed
+   Returns a Bool value indicating whether the side menu is showed
    
    - returns: Bool value
    */
-  public func isSideMenuOpen() -> Bool {
-    guard let sideMenu = sideMenuController()?.sideMenu else {
+  public mutating func isSideMenuOpen() -> Bool {
+    guard let sideMenu = lazySideMenuController?.sideMenu else {
        return false
     }
     return sideMenu.isMenuOpen
@@ -66,7 +66,7 @@ public struct LNSideMenuManagement: LNSideMenuManager {
    
    - returns: a viewcontroller responding to protocol
    */
-  public func sideMenuController() -> LNSideMenuProtocol? {
+  public func getSideMenuController() -> LNSideMenuProtocol? {
     guard var interation: UIViewController? = viewController?.parentViewController else {
       return topMostController()
     }

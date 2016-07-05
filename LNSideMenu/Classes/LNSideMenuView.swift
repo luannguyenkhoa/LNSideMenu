@@ -21,7 +21,7 @@ internal class LNSideMenuView: UIView, UIScrollViewDelegate {
   private let kNumberVelocityConstant: CGFloat = 60
   
   // MARK: Variables
-  var indexOfCellHighlight: Int = Int.max
+  var indexOfDefaultCellHighlight: Int = Int.max
   
   private var totalCells: Int = 10
   private var totalCellOnScreen: Int = 10
@@ -31,7 +31,7 @@ internal class LNSideMenuView: UIView, UIScrollViewDelegate {
   private var lastContentOffset: CGFloat = 0
   private var index: Int = 0
   private var lastIndex: Int = 0
-  private var highlightItemWhenDidTouch: Bool = false
+  private var highlightItemWhenDidTouch: Bool = true
   private var isDidShow: Bool = false
   private var originalXRight: CGFloat = 0
   private var originalXLeft: CGFloat = 0
@@ -100,7 +100,7 @@ internal class LNSideMenuView: UIView, UIScrollViewDelegate {
     
     // Drawing a background view
     self.drawRect |> self.frame
-    currentItem = menusScrollView.viewWithTag |> indexOfCellHighlight
+    currentItem = menusScrollView.viewWithTag |> indexOfDefaultCellHighlight
     
     // Add self to parent view
     sourceView.addSubview |> self
@@ -206,7 +206,7 @@ internal class LNSideMenuView: UIView, UIScrollViewDelegate {
       
       // Initial item by index
       let itemView = LNItemView()
-      itemView.setupView |> (itemFrame, items[index], index==indexOfCellHighlight, right, itemTitleColor, highlightItemColor, itemBackgroundColor)
+      itemView.setupView |> (itemFrame, items[index], index==indexOfDefaultCellHighlight, right, itemTitleColor, highlightItemColor, itemBackgroundColor)
       itemView.tag = index
       // add single tap gesture for each item of menu
       let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapContentView(_:)))

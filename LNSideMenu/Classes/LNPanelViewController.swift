@@ -26,10 +26,11 @@ internal class LNPanelViewController: UIViewController {
   
   lazy var sideMenuView: LNSideMenuView = LNSideMenuView()
   
-  convenience init(items: Array<String>, menuPosition: Position) {
+  convenience init(items: Array<String>, menuPosition: Position, highlightCellAtIndex: Int = Int.max) {
     self.init()
     self.items = items
     self.position = menuPosition
+    self.sideMenuView.indexOfDefaultCellHighlight = highlightCellAtIndex
   }
   
   override internal func viewDidLoad() {

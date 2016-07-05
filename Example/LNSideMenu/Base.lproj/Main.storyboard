@@ -5,7 +5,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
     </dependencies>
     <scenes>
-        <!--Title-->
+        <!--ViewController-->
         <scene sceneID="alC-MQ-8z6">
             <objects>
                 <viewController storyboardIdentifier="ViewController" id="gAc-0s-RTP" customClass="ViewController" customModule="LNSideMenu_Example" customModuleProvider="target" sceneMemberID="viewController">
@@ -35,22 +35,26 @@
                                     <constraint firstAttribute="height" constant="128" id="EjI-xe-FHv"/>
                                 </constraints>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="l9j-U0-jfu">
+                                <rect key="frame" x="259.5" y="193" width="81" height="30"/>
+                                <state key="normal" title="Switch Side"/>
+                                <connections>
+                                    <action selector="switchSideMenuPosition:" destination="gAc-0s-RTP" eventType="touchUpInside" id="1OV-XA-d1C"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="l9j-U0-jfu" firstAttribute="centerX" secondItem="FdJ-Ou-MQz" secondAttribute="centerX" id="2eS-VQ-ea3"/>
+                            <constraint firstItem="FdJ-Ou-MQz" firstAttribute="top" secondItem="l9j-U0-jfu" secondAttribute="bottom" constant="13" id="9U4-RG-a5L"/>
                             <constraint firstItem="FdJ-Ou-MQz" firstAttribute="centerX" secondItem="wIj-QC-Sxd" secondAttribute="centerX" id="Zia-zi-MUk"/>
                             <constraint firstItem="FdJ-Ou-MQz" firstAttribute="centerY" secondItem="wIj-QC-Sxd" secondAttribute="centerY" id="m8x-Cp-v3P"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Title" id="lLb-tC-Lg6">
-                        <barButtonItem key="leftBarButtonItem" title="Left" id="SIO-Ns-PAY">
+                    <navigationItem key="navigationItem" title="ViewController" id="lLb-tC-Lg6">
+                        <barButtonItem key="leftBarButtonItem" title="Toggle" id="SIO-Ns-PAY">
                             <connections>
                                 <action selector="toogleSideMenu:" destination="gAc-0s-RTP" id="WhK-BB-LIH"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Right" id="YI9-ka-F9v">
-                            <connections>
-                                <action selector="toggleRightMenu:" destination="gAc-0s-RTP" id="AQk-OI-HNl"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>

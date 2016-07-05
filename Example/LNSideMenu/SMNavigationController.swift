@@ -10,20 +10,31 @@ import LNSideMenu
 
 class SMNavigationController: LNSideMenuNavigationController {
   
+  private var items:[String]?
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     
     // Do any additional setup after loading the view.
-    let items = ["All","Popular","Invitations","Anniversaries","Concerts", "Cultural","Fesivals","Holidays","Cele","Lonely","Daily","Hobbit","Alone","Single","Fesivals","Holidays","Invitations","Anniversaries"]
-    sideMenu = LNSideMenu(sourceView: view, menuPosition: .Left, items: items)
-    sideMenu?.delegate = self
-    view.bringSubviewToFront(navigationBar)
-    
+    items = ["All","Popular","Invitations","Anniversaries","Concerts", "Cultural","Fesivals","Holidays","Cele","Lonely","Daily","Hobbit","Alone","Single","Fesivals","Holidays","Invitations","Anniversaries"]
+    initialSideMenu(.Left)
   }
   
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
     // Dispose of any resources that can be recreated.
+  }
+  
+  private func initialSideMenu(position: Position) {
+    sideMenu = LNSideMenu(sourceView: view, menuPosition: position, items: items!)
+    
+    sideMenu?.delegate = self
+    view.bringSubviewToFront(navigationBar)
+  }
+  
+  func switchPosition() {
+    let isLeft = sideMenu?.position == .Left
+    initialSideMenu(isLeft ? .Right : .Left)
   }
 }
 

@@ -42,7 +42,7 @@ public class LNSideMenu: NSObject, UIGestureRecognizerDelegate {
   public var items = [String]()
   
   // private
-  private var position: Position = .Left
+  private(set) public var position: Position = .Left
   private let sideMenuContainerView = UIView()
   private (set)var menuViewController: LNPanelViewController!
   private var sourceView: UIView!
@@ -78,10 +78,10 @@ public class LNSideMenu: NSObject, UIGestureRecognizerDelegate {
     handler(leftSwipeGesture, rightSwipeGesture)
   }
   
-  public convenience init(sourceView source: UIView, menuPosition: Position, items: [String]) {
+  public convenience init(sourceView source: UIView, menuPosition: Position, items: [String], highlightItemAtIndex: Int = Int.max) {
     self.init(sourceView: source, position: menuPosition)
     self.items = items
-    self.menuViewController = LNPanelViewController(items: items, menuPosition: menuPosition)
+    self.menuViewController = LNPanelViewController(items: items, menuPosition: menuPosition, highlightCellAtIndex: highlightItemAtIndex)
     self.menuViewController.delegate = self
     sideMenuContainerView.addSubview |> self.menuViewController.view
   }

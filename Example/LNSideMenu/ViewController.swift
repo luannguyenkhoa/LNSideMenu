@@ -13,11 +13,14 @@ class ViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     // Do any additional setup after loading the view, typically from a nib.
+    
   }
   
   override func viewWillAppear(animated: Bool) {
     super.viewWillAppear(animated)
+    // Set navigation bar translucent style
     self.navigationBarTranslucentStyle()
+    // Update side menu
     sideMenuManager?.sideMenuController()?.sideMenu?.isNavbarHiddenOrTranslucent = true
   }
 
@@ -26,7 +29,14 @@ class ViewController: UIViewController {
   }
   
   @IBAction func toggleRightMenu(sender: AnyObject) {
-    
+    sideMenuManager?.toggleSideMenuView()
+  }
+  
+  @IBAction func switchSideMenuPosition(sender: AnyObject) {
+    if let navigationController = self.navigationController as? SMNavigationController {
+      navigationController.switchPosition()
+      navigationController.sideMenu?.isNavbarHiddenOrTranslucent = true
+    }
   }
   
   override func didReceiveMemoryWarning() {
