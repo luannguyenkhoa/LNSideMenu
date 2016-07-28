@@ -16,7 +16,7 @@ class SMNavigationController: LNSideMenuNavigationController {
     super.viewDidLoad()
     
     // Do any additional setup after loading the view.
-    items = ["All","Popular","Invitations","Anniversaries","Concerts", "Cultural","Fesivals","Holidays","Cele","Lonely","Daily","Hobbit","Alone","Single","Fesivals","Holidays","Invitations","Anniversaries"]
+    items = ["All","Hot Food","Sandwiches","Hot Pots","Hot Rolls", "Salads","Pies","Dessrts","Drinks","Breakfast","Cookies","Lunch"]
     initialSideMenu(.Left)
   }
   
