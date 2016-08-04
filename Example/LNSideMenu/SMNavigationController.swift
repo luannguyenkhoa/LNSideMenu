@@ -16,7 +16,7 @@ class SMNavigationController: LNSideMenuNavigationController {
     super.viewDidLoad()
     
     // Do any additional setup after loading the view.
-    items = ["All","Popular","Invitations","Anniversaries","Concerts", "Cultural","Fesivals","Holidays","Cele","Lonely","Daily","Hobbit","Alone","Single","Fesivals","Holidays","Invitations","Anniversaries"]
+    items = ["All","Hot Food","Sandwiches","Hot Pots","Hot Rolls", "Salads","Pies","Dessrts","Drinks","Breakfast","Cookies","Lunch"]
     initialSideMenu(.Left)
   }
   
@@ -27,14 +27,9 @@ class SMNavigationController: LNSideMenuNavigationController {
   
   private func initialSideMenu(position: Position) {
     sideMenu = LNSideMenu(sourceView: view, menuPosition: position, items: items!)
-    
+    sideMenu?.menuViewController.menuBackgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.85)
     sideMenu?.delegate = self
     view.bringSubviewToFront(navigationBar)
-  }
-  
-  func switchPosition() {
-    let isLeft = sideMenu?.position == .Left
-    initialSideMenu(isLeft ? .Right : .Left)
   }
 }
 

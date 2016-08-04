@@ -7,9 +7,7 @@
 
 A side menu based on [ENSwiftSideMenu](https://github.com/evnaz/ENSwiftSideMenu). The side menu view controller is available and it will be automatically added to Left/Right container view. This project is written in **Swift**:
 
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=KdHJ3Q43wtY
-" target="_blank"><img src="http://img.youtube.com/vi/KdHJ3Q43wtY/0.jpg" 
-alt="IMAGE ALT TEXT HERE" width="240" height="180" border="10" /></a>
+![Demo](https://cloud.githubusercontent.com/assets/13121441/17392464/bc836378-5a47-11e6-87e3-0ca9aad0f8a7.gif)
 
 ## Usage
 
@@ -21,7 +19,7 @@ alt="IMAGE ALT TEXT HERE" width="240" height="180" border="10" /></a>
     super.viewDidLoad()
 
     // Do any additional setup after loading the view.
-    let items = ["All","Popular","Invitations","Anniversaries","Concerts", "Cultural","Fesivals","Holidays","Cele","Lonely","Daily","Hobbit","Alone","Single","Fesivals","Holidays","Invitations","Anniversaries"]
+    let items = ["All","Hot Food","Sandwiches","Hot Pots","Hot Rolls", "Salads","Pies","Dessrts","Drinks","Breakfast","Cookies","Lunch"]
     sideMenu = LNSideMenu(sourceView: view, menuPosition: .Left, items: items)
     // One more optional parameter is highlighItemAtIndex (Int)
     sideMenu?.delegate = self
@@ -53,8 +51,22 @@ alt="IMAGE ALT TEXT HERE" width="240" height="180" border="10" /></a>
 
 . Check example project for more explaination
 
+## Custom Properties
+```
+. disabled: default is false, disabled/enabled sidemenu
+. bouncingEnabled: default is true, disabled/enabled dynamic animator
+. Gesture recognizers: allowLeftSwipe, allowRightSwipe, allowPanGesture: default is true
+. animationDuration: default is 0.5, show/hide sidemenu animation duration
+. hideWhenDidSelectOnCell: default is true, the sidemenu is hidden when selecting an item on menu
+. SideMenu custom colors: 
+  - menuBackgroundColor: default is purpleColor
+  - itemBGColor: default is whiteColor
+  - highlightItemColor: default is redColor
+  - itemTitleColor: default is blackColor
+```
+
 ## Requirements
-. Xcode 7.3 or higher
+. Xcode 7.3
 . iOS 8 or higher
 
 ## Installation
@@ -65,7 +77,7 @@ LNSideMenu is available through [CocoaPods](http://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
 ```ruby
-pod 'LNSideMenu', '~> 1.0.1'
+pod 'LNSideMenu', '~> 1.1'
 ```
 
 ### Manual
@@ -74,7 +86,7 @@ Adding all files in LNSideMenu folder to your project folder
 
 ## TODO
 
-Implementing the UIDynamic's bouncing animation and UIBlurEffect for side menu's background 
+Custom container view controller transitions and animations.
 
 ## Author
 

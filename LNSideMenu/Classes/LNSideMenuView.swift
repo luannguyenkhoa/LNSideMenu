@@ -46,7 +46,7 @@ internal class LNSideMenuView: UIView, UIScrollViewDelegate {
   var itemTitleColor = LNDefaultColor.ItemTitleColor.color()
   
   // MARK: Components
-  private var menusScrollView: UIScrollView! = UIScrollView()
+  private(set) public var menusScrollView: UIScrollView! = UIScrollView()
   private var panRecognizer: UIPanGestureRecognizer?
   private var sourceView: UIView?
   private var currentItem: UIView?
@@ -372,6 +372,12 @@ internal class LNSideMenuView: UIView, UIScrollViewDelegate {
   }
   
   // MARK: Drawing
+  /*
+   Using Core Graphic for drawing shapes by positions. CGContext is a powerful package for doing this feature.
+   The CGContextRef opaque type represents a Quartz 2D drawing destination.
+   
+   For more details: https://developer.apple.com/library/mac/documentation/GraphicsImaging/Reference/CGContext/
+   */
   
   private func clearDrawRect(rect: CGRect) {
     guard let context = UIGraphicsGetCurrentContext() else { return }

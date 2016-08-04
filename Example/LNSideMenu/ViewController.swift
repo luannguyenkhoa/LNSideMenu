@@ -22,21 +22,12 @@ class ViewController: UIViewController {
     self.navigationBarTranslucentStyle()
     // Update side menu
     sideMenuManager?.sideMenuController()?.sideMenu?.isNavbarHiddenOrTranslucent = true
+    // Re-enable sidemenu
+    sideMenuManager?.sideMenuController()?.sideMenu?.disabled = false
   }
 
   @IBAction func toogleSideMenu(sender: AnyObject) {
     sideMenuManager?.toggleSideMenuView()
-  }
-  
-  @IBAction func toggleRightMenu(sender: AnyObject) {
-    sideMenuManager?.toggleSideMenuView()
-  }
-  
-  @IBAction func switchSideMenuPosition(sender: AnyObject) {
-    if let navigationController = self.navigationController as? SMNavigationController {
-      navigationController.switchPosition()
-      navigationController.sideMenu?.isNavbarHiddenOrTranslucent = true
-    }
   }
   
   override func didReceiveMemoryWarning() {

@@ -17,6 +17,7 @@
 		86728F04125C5CBFE8385116A07F254C /* Pods-LNSideMenu_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 5EAA33DEDC2B6BA50954A06130C3BDBD /* Pods-LNSideMenu_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		91FBFA3F92E137F6EA98C42562C608B7 /* LNItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C65D34209CB6FD16369F2D69B37089 /* LNItemView.swift */; };
 		A89C8E1C64741569CC0A194F3E6BE89A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E4E89230EF59BC255123B67864ACF77 /* Foundation.framework */; };
+		B3E14D461D2F5032005C6228 /* LNTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3E14D451D2F5032005C6228 /* LNTransition.swift */; };
 		CEC1067C34124EEC10F17DD7BAFB275D /* LNCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16895112DD37F8148E18D702ECB31C0D /* LNCommon.swift */; };
 		CF29F8071F2E762E02C0C5C1C6AD6BAB /* LNSideMenu-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 98C92A0544AB42B016896C150445BCD3 /* LNSideMenu-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D99499C40CEBF876467D4D079E8C8021 /* LNSideMenuNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 528B9C2ADFCA218A3616A360C55D15F7 /* LNSideMenuNavigationController.swift */; };
@@ -56,6 +57,7 @@
 		8C73A64A09EE1AC2A180BCBD77D5A7E1 /* Pods-LNSideMenu_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-LNSideMenu_Example.modulemap"; sourceTree = "<group>"; };
 		98C92A0544AB42B016896C150445BCD3 /* LNSideMenu-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "LNSideMenu-umbrella.h"; sourceTree = "<group>"; };
 		AE85ABA6FFA24C87D422D4BD5CDA5830 /* LNSideMenu-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "LNSideMenu-dummy.m"; sourceTree = "<group>"; };
+		B3E14D451D2F5032005C6228 /* LNTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LNTransition.swift; sourceTree = "<group>"; };
 		BA6428E9F66FD5A23C0A2E06ED26CD2F /* Podfile */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		DA7EA5CAA8F5E747C46A662BCB64A2DF /* Pods-LNSideMenu_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-LNSideMenu_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		E46A97FF3471BA01831DE51BEBAAD976 /* Pods-LNSideMenu_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-LNSideMenu_Example.release.xcconfig"; sourceTree = "<group>"; };
@@ -176,6 +178,7 @@
 				5FF64181FB624441B2EE61504498CC79 /* LNSideMenuMangement.swift */,
 				528B9C2ADFCA218A3616A360C55D15F7 /* LNSideMenuNavigationController.swift */,
 				651F18B77CB91C6A44B937F5F206428A /* LNSideMenuView.swift */,
+				B3E14D451D2F5032005C6228 /* LNTransition.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -299,6 +302,7 @@
 				91FBFA3F92E137F6EA98C42562C608B7 /* LNItemView.swift in Sources */,
 				01B4AE9BE8115C73406094A1ED85CBF4 /* LNPanelViewController.swift in Sources */,
 				7FCB4905B1187C66362610DD34143C1D /* LNSideMenu-dummy.m in Sources */,
+				B3E14D461D2F5032005C6228 /* LNTransition.swift in Sources */,
 				13768AB3DCC5DFCA0C7FBE4CBFA77D86 /* LNSideMenu.swift in Sources */,
 				0C6434202BC8AD388E0EF6E093F687F6 /* LNSideMenuMangement.swift in Sources */,
 				D99499C40CEBF876467D4D079E8C8021 /* LNSideMenuNavigationController.swift in Sources */,

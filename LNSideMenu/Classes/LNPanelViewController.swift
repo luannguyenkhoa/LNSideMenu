@@ -8,9 +8,10 @@
 
 import UIKit
 
-internal class LNPanelViewController: UIViewController {
+public class LNPanelViewController: UIViewController {
   
   private var items: [String] = []
+  private var didInit = false
   weak var delegate: LNSMDelegate?
   var position: Position = .Left
   var isNavigationBarChanged = false {
@@ -19,10 +20,10 @@ internal class LNPanelViewController: UIViewController {
     }
   }
   
-  var menuBackgroundColor = LNDefaultColor.BackgroundColor.color()
-  var itemBGColor = LNDefaultColor.ItemBackgroundColor.color()
-  var highlightItemColor = LNDefaultColor.HighlightItem.color()
-  var itemTitleColor = LNDefaultColor.ItemTitleColor.color()
+  public var menuBackgroundColor = LNDefaultColor.BackgroundColor.color()
+  public var itemBGColor = LNDefaultColor.ItemBackgroundColor.color()
+  public var highlightItemColor = LNDefaultColor.HighlightItem.color()
+  public var itemTitleColor = LNDefaultColor.ItemTitleColor.color()
   
   lazy var sideMenuView: LNSideMenuView = LNSideMenuView()
   
@@ -33,12 +34,16 @@ internal class LNPanelViewController: UIViewController {
     self.sideMenuView.indexOfDefaultCellHighlight = highlightCellAtIndex
   }
   
-  override internal func viewDidLoad() {
+  override public func viewDidLoad() {
     super.viewDidLoad()
     
-    initialSideMenu()
     self.view.backgroundColor = .clearColor()
     self.view.autoresizingMask = [.FlexibleHeight, .FlexibleWidth]
+  }
+  
+  public override func viewWillAppear(animated: Bool) {
+    super.viewWillAppear(animated)
+    initialSideMenu()
   }
   /**
    Initial side menu with components

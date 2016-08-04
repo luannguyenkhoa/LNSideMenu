@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'LNSideMenu'
-  s.version          = '1.0.1'
+  s.version          = '1.1.0'
   s.summary          = 'A side menu control for iOS in Swift with custom layer and scrolling effect. Right and Left sides. iOS 8+.'
 
 # This description is used to generate tags and improve search results.
@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-    Based on the side menu libraries that have already published on github, this side menu just customs a bit about its layer and scrolling effect.
+    Based on the side menu libraries that have already published on github, this side menu have a little bit custom the layer and scrolling effect.
                        DESC
 
   s.homepage         = 'https://github.com/luannguyenkhoa/LNSideMenu'
