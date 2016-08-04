@@ -7,7 +7,7 @@
 
 A side menu based on [ENSwiftSideMenu](https://github.com/evnaz/ENSwiftSideMenu). The side menu view controller is available and it will be automatically added to Left/Right container view. This project is written in **Swift**:
 
-![Demo](https://cloud.githubusercontent.com/assets/13121441/17392464/bc836378-5a47-11e6-87e3-0ca9aad0f8a7.gif)
+![Demo](https://cloud.githubusercontent.com/assets/13121441/17393128/d1500b0e-5a4b-11e6-86fe-2029241720d0.gif)
 
 ## Usage
 
@@ -77,7 +77,7 @@ LNSideMenu is available through [CocoaPods](http://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
 ```ruby
-pod 'LNSideMenu', '~> 1.1'
+pod 'LNSideMenu', '~> 1.1.0'
 ```
 
 ### Manual
