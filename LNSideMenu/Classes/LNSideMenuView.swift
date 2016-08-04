@@ -46,7 +46,7 @@ internal class LNSideMenuView: UIView, UIScrollViewDelegate {
   var itemTitleColor = LNDefaultColor.ItemTitleColor.color()
   
   // MARK: Components
-  private(set) public var menusScrollView: UIScrollView! = UIScrollView()
+  private var menusScrollView: UIScrollView! = UIScrollView()
   private var panRecognizer: UIPanGestureRecognizer?
   private var sourceView: UIView?
   private var currentItem: UIView?
