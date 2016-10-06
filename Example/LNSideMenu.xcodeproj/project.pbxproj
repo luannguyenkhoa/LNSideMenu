@@ -16,6 +16,9 @@
 		B32633E41D2B5734005B39A1 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32633E11D2B5734005B39A1 /* ViewController.swift */; };
 		B32633E51D2B5734005B39A1 /* SMNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32633E21D2B5734005B39A1 /* SMNavigationController.swift */; };
 		B32633E61D2B5734005B39A1 /* NextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32633E31D2B5734005B39A1 /* NextViewController.swift */; };
+		B354A7CD1DA4CEFD0056A64C /* LeftMenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B354A7CC1DA4CEFD0056A64C /* LeftMenuTableViewController.swift */; };
+		B3E9A6441DA556BF0006023F /* MenuTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3E9A6421DA556BF0006023F /* MenuTableViewCell.swift */; };
+		B3E9A6451DA556BF0006023F /* MenuTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B3E9A6431DA556BF0006023F /* MenuTableViewCell.xib */; };
 		B3F17C621D52DCF200A44CE3 /* ContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F17C611D52DCF200A44CE3 /* ContentViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -46,6 +49,9 @@
 		B32633E11D2B5734005B39A1 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		B32633E21D2B5734005B39A1 /* SMNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SMNavigationController.swift; sourceTree = "<group>"; };
 		B32633E31D2B5734005B39A1 /* NextViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NextViewController.swift; sourceTree = "<group>"; };
+		B354A7CC1DA4CEFD0056A64C /* LeftMenuTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeftMenuTableViewController.swift; sourceTree = "<group>"; };
+		B3E9A6421DA556BF0006023F /* MenuTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTableViewCell.swift; sourceTree = "<group>"; };
+		B3E9A6431DA556BF0006023F /* MenuTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MenuTableViewCell.xib; sourceTree = "<group>"; };
 		B3F17C611D52DCF200A44CE3 /* ContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentViewController.swift; sourceTree = "<group>"; };
 		BFB584EA3CAADB61A9210B7F /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		C024FA70B77AE5A80929D57A /* LNSideMenu.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LNSideMenu.podspec; path = ../LNSideMenu.podspec; sourceTree = "<group>"; };
@@ -102,11 +108,13 @@
 		607FACD21AFB9204008FA782 /* Example for LNSideMenu */ = {
 			isa = PBXGroup;
 			children = (
+				B3E9A6411DA5569E0006023F /* MenuCell */,
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
 				B32633E11D2B5734005B39A1 /* ViewController.swift */,
 				B32633E21D2B5734005B39A1 /* SMNavigationController.swift */,
 				B3F17C611D52DCF200A44CE3 /* ContentViewController.swift */,
 				B32633E31D2B5734005B39A1 /* NextViewController.swift */,
+				B354A7CC1DA4CEFD0056A64C /* LeftMenuTableViewController.swift */,
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
 				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
@@ -149,6 +157,15 @@
 				BFB584EA3CAADB61A9210B7F /* LICENSE */,
 			);
 			name = "Podspec Metadata";
+			sourceTree = "<group>";
+		};
+		B3E9A6411DA5569E0006023F /* MenuCell */ = {
+			isa = PBXGroup;
+			children = (
+				B3E9A6421DA556BF0006023F /* MenuTableViewCell.swift */,
+				B3E9A6431DA556BF0006023F /* MenuTableViewCell.xib */,
+			);
+			name = MenuCell;
 			sourceTree = "<group>";
 		};
 		C72A1CBE869F2D294B7DF8A6 /* Pods */ = {
@@ -208,15 +225,17 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0720;
-				LastUpgradeCheck = 0720;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = CocoaPods;
 				TargetAttributes = {
 					607FACCF1AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
 						DevelopmentTeam = JGS4F37D8F;
+						LastSwiftMigration = 0800;
 					};
 					607FACE41AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
+						LastSwiftMigration = 0800;
 						TestTargetID = 607FACCF1AFB9204008FA782;
 					};
 				};
@@ -247,6 +266,7 @@
 			files = (
 				607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */,
 				607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */,
+				B3E9A6451DA556BF0006023F /* MenuTableViewCell.xib in Resources */,
 				607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -315,9 +335,11 @@
 			files = (
 				B3F17C621D52DCF200A44CE3 /* ContentViewController.swift in Sources */,
 				B32633E41D2B5734005B39A1 /* ViewController.swift in Sources */,
+				B3E9A6441DA556BF0006023F /* MenuTableViewCell.swift in Sources */,
 				B32633E61D2B5734005B39A1 /* NextViewController.swift in Sources */,
 				B32633E51D2B5734005B39A1 /* SMNavigationController.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
+				B354A7CD1DA4CEFD0056A64C /* LeftMenuTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -372,8 +394,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -417,8 +441,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -437,6 +463,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -445,6 +472,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0EE65241D0373B88FBF1AC39 /* Pods-LNSideMenu_Example.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -454,6 +482,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -461,6 +490,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3ED49313F1B0D0FB510F4C76 /* Pods-LNSideMenu_Example.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -470,6 +500,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -488,6 +519,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -502,6 +534,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

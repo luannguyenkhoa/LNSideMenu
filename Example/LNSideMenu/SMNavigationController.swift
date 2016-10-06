@@ -10,14 +10,17 @@ import LNSideMenu
 
 class SMNavigationController: LNSideMenuNavigationController {
   
-  private var items:[String]?
+  fileprivate var items:[String]?
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
     // Do any additional setup after loading the view.
+    // Using default side menu
     items = ["All","Hot Food","Sandwiches","Hot Pots","Hot Rolls", "Salads","Pies","Dessrts","Drinks","Breakfast","Cookies","Lunch"]
-    initialSideMenu(.Left)
+    initialSideMenu(.left)
+    // Custom side menu
+//    initialCustomMenu(pos: .left)
   }
   
   override func didReceiveMemoryWarning() {
@@ -25,11 +28,38 @@ class SMNavigationController: LNSideMenuNavigationController {
     // Dispose of any resources that can be recreated.
   }
   
-  private func initialSideMenu(position: Position) {
+  fileprivate func initialSideMenu(_ position: Position) {
     sideMenu = LNSideMenu(sourceView: view, menuPosition: position, items: items!)
-    sideMenu?.menuViewController.menuBackgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.85)
+    sideMenu?.menuViewController?.menuBgColor = UIColor.black.withAlphaComponent(0.85)
     sideMenu?.delegate = self
-    view.bringSubviewToFront(navigationBar)
+    view.bringSubview(toFront: navigationBar)
+  }
+  
+  fileprivate func initialCustomMenu(pos position: Position) {
+    let menu = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "LeftMenuTableViewController") as! LeftMenuTableViewController
+    menu.delegate = self
+    sideMenu = LNSideMenu(sourceView: view, menuPosition: position, customSideMenu: menu)
+    sideMenu?.delegate = self
+    sideMenu?.enableDynamic = true
+    // Moving down the menu view under navigation bar
+    sideMenu?.underNavigationBar = true
+  }
+  
+  fileprivate func setContentVC(_ index: Int) {
+    print("Did select item at index: \(index)")
+    var nViewController: UIViewController? = nil
+    if let viewController = viewControllers.first , viewController is NextViewController {
+      nViewController = storyboard?.instantiateViewController(withIdentifier: "ViewController")
+    } else {
+      nViewController = storyboard?.instantiateViewController(withIdentifier: "NextViewController")
+    }
+    if let viewController = nViewController {
+      self.setContentViewController(viewController)
+    }
+    // Test moving up/down the menu view
+    if let sm = sideMenu, sm.isCustomMenu {
+      sideMenu?.underNavigationBar = false
+    }
   }
 }
 
@@ -50,16 +80,16 @@ extension SMNavigationController: LNSideMenuDelegate {
     print("sideMenuDidOpen")
   }
   
-  func didSelectItemAtIndex(index: Int) {
-    print("Did select item at index: \(index)")
-    var nViewController: UIViewController? = nil
-    if let viewController = viewControllers.first where viewController is NextViewController {
-      nViewController = storyboard?.instantiateViewControllerWithIdentifier("ViewController")
-    } else {
-      nViewController = storyboard?.instantiateViewControllerWithIdentifier("NextViewController")
-    }
-    if let viewController = nViewController {
-      self.setContentViewController(viewController)
+  func didSelectItemAtIndex(_ index: Int) {
+    setContentVC(index)
+  }
+}
+
+extension SMNavigationController: LeftMenuDelegate {
+  func didSelectItemAtIndex(index idx: Int) {
+    sideMenu?.toggleMenu() { [unowned self] _ in
+      self.setContentVC(idx)
     }
   }
 }
+

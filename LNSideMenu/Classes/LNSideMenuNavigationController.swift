@@ -8,24 +8,24 @@
 
 import UIKit
 
-public class LNSideMenuNavigationController: UINavigationController, LNSideMenuProtocol {
+open class LNSideMenuNavigationController: UINavigationController, LNSideMenuProtocol {
 
-  public var sideMenu: LNSideMenu?
-  public var sideMenuAnimationType: LNSideMenuAnimation = .Default
+  open var sideMenu: LNSideMenu?
+  open var sideMenuAnimationType: LNSideMenuAnimation = .default
   
-  public override func viewDidLoad() {
+  open override func viewDidLoad() {
     super.viewDidLoad()
   }
   
-  public func setContentViewController(contentViewController: UIViewController) {
+  open func setContentViewController(_ contentViewController: UIViewController) {
     // Hide side menu at the first
     sideMenu?.hideSideMenu()
     // Add contentViewController within default animation or none
     switch sideMenuAnimationType {
-    case .None:
+    case .none:
       self.viewControllers = [contentViewController]
       break
-    case .Default:
+    case .default:
       contentViewController.navigationItem.hidesBackButton = true
       setViewControllers |> ([contentViewController], true)
       break
@@ -36,10 +36,10 @@ public class LNSideMenuNavigationController: UINavigationController, LNSideMenuP
    The app will not supports the device rotation, it's perfectly compatible with the portrait mode.
    Because the design will be broken in the landscape mode.
    */
-  public override func shouldAutorotate() -> Bool {
+  open override var shouldAutorotate : Bool {
     return false
   }
-  override public func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
-    return UIInterfaceOrientationMask.Portrait
+  override open var supportedInterfaceOrientations : UIInterfaceOrientationMask {
+    return UIInterfaceOrientationMask.portrait
   }
 }

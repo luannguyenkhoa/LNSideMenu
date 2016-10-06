@@ -11,12 +11,13 @@ import UIKit
 public struct LNSideMenuManagement: LNSideMenuManager {
   
   var viewController: UIViewController?
+  public init() {}
   public init(viewController: UIViewController) {
     self.viewController = viewController
   }
   
   // Lazy property
-  private lazy var lazySideMenuController: LNSideMenuProtocol? = {
+  fileprivate lazy var lazySideMenuController: LNSideMenuProtocol? = {
     return self.getSideMenuController()
   }()
   
@@ -67,23 +68,25 @@ public struct LNSideMenuManagement: LNSideMenuManager {
    - returns: a viewcontroller responding to protocol
    */
   public func getSideMenuController() -> LNSideMenuProtocol? {
-    guard var interation: UIViewController? = viewController?.parentViewController else {
+    var iteration: UIViewController? = viewController?.parent
+    if iteration == nil {
       return topMostController()
     }
+    
     repeat {
-      if interation is LNSideMenuProtocol {
-        return interation as? LNSideMenuProtocol
-      } else if let parentViewController = interation?.parentViewController where parentViewController != interation {
-        interation = parentViewController
+      if iteration is LNSideMenuProtocol {
+        return iteration as? LNSideMenuProtocol
+      } else if let parentViewController = iteration?.parent , parentViewController != iteration {
+        iteration = parentViewController
       } else {
-        interation = nil
+        iteration = nil
       }
-    } while (interation != nil)
-    return interation as? LNSideMenuProtocol
+    } while (iteration != nil)
+    return iteration as? LNSideMenuProtocol
   }
   
-  private func topMostController() -> LNSideMenuProtocol? {
-    var topController = UIApplication.sharedApplication().keyWindow?.rootViewController
+  fileprivate func topMostController() -> LNSideMenuProtocol? {
+    var topController = UIApplication.shared.keyWindow?.rootViewController
     if topController is UITabBarController {
       topController = (topController as! UITabBarController).selectedViewController
     }

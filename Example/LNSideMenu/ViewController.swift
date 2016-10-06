@@ -16,7 +16,7 @@ class ViewController: UIViewController {
     
   }
   
-  override func viewWillAppear(animated: Bool) {
+  override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     // Set navigation bar translucent style
     self.navigationBarTranslucentStyle()
@@ -26,7 +26,7 @@ class ViewController: UIViewController {
     sideMenuManager?.sideMenuController()?.sideMenu?.disabled = false
   }
 
-  @IBAction func toogleSideMenu(sender: AnyObject) {
+  @IBAction func toogleSideMenu(_ sender: AnyObject) {
     sideMenuManager?.toggleSideMenuView()
   }
   

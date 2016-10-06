@@ -8,22 +8,23 @@
 
 import UIKit
 
-public class LNPanelViewController: UIViewController {
+open class LNPanelViewController: UIViewController {
   
-  private var items: [String] = []
-  private var didInit = false
+  // MARK: Properties
+  fileprivate var items: [String] = []
+  fileprivate var didInit = false
   weak var delegate: LNSMDelegate?
-  var position: Position = .Left
+  var position: Position = .left
   var isNavigationBarChanged = false {
     didSet {
       updateFrame()
     }
   }
-  
-  public var menuBackgroundColor = LNDefaultColor.BackgroundColor.color()
-  public var itemBGColor = LNDefaultColor.ItemBackgroundColor.color()
-  public var highlightItemColor = LNDefaultColor.HighlightItem.color()
-  public var itemTitleColor = LNDefaultColor.ItemTitleColor.color()
+  // MARK: Colors
+  open var menuBgColor = LNColor.bgView.color
+  open var itemBgColor = LNColor.bgItem.color
+  open var highlightColor = LNColor.highlight.color
+  open var titleColor = LNColor.title.color
   
   lazy var sideMenuView: LNSideMenuView = LNSideMenuView()
   
@@ -34,57 +35,71 @@ public class LNPanelViewController: UIViewController {
     self.sideMenuView.indexOfDefaultCellHighlight = highlightCellAtIndex
   }
   
-  override public func viewDidLoad() {
+  override open func viewDidLoad() {
     super.viewDidLoad()
     
-    self.view.backgroundColor = .clearColor()
-    self.view.autoresizingMask = [.FlexibleHeight, .FlexibleWidth]
+    self.view.backgroundColor = .clear
+    self.view.autoresizingMask = [.flexibleHeight, .flexibleWidth]
   }
   
-  public override func viewWillAppear(animated: Bool) {
+  open override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     initialSideMenu()
   }
   /**
    Initial side menu with components
    */
-  private func initialSideMenu() {
+  fileprivate func initialSideMenu() {
     sideMenuView.items = items
-    setViewFrame()
+    _ = setViewFrame()
     
     // Config colors
-    sideMenuView.bgColor = menuBackgroundColor
-    sideMenuView.itemTitleColor = itemTitleColor
-    sideMenuView.itemBackgroundColor = itemBGColor
-    sideMenuView.highlightItemColor = highlightItemColor
+    sideMenuView.bgColor = menuBgColor
+    sideMenuView.titleColor = titleColor
+    sideMenuView.itemBgColor = itemBgColor
+    sideMenuView.highlightColor = highlightColor
     
     // Setup menu
     sideMenuView.setupMenu |> (view, position)
     sideMenuView.delegate = self
   }
   
-  func setViewFrame() -> Bool {
+  internal func setViewFrame() -> Bool {
     // Set frame for view
     let distance: CGFloat = isNavigationBarChanged ? 0 : 64
-    if view.frame.origin.y != distance {
-      view.frame.origin.y = distance
-      view.frame.size.height = screenHeight - view.frame.origin.y
+    if view.y != distance {
+      view.y = distance
+      view.height = screenHeight - view.y
       return true
     }
     return false
   }
   
-  func updateFrame() {
+  internal func updateFrame() {
     // Just refresh side menu iff the view frame has already changed
     if setViewFrame() {
       sideMenuView.refreshMenuWithFrame |> (self.view.frame, isNavigationBarChanged)
     }
   }
   
+  // Moving all items out of container view bounds before performing animation
+  internal func prepareForAnimation() {
+    sideMenuView.prepareForAnimation()
+  }
+  
+  internal func animateContents() {
+    // Animate items when it's about diplayed
+    sideMenuView.animateContents()
+  }
+  
+  internal func transitionToView() {
+    // TODO: implementing set contentViewController effection
+  }
+  
 }
 
 extension LNPanelViewController: LNSMDelegate {
-  func didSelectItemAtIndex(SideMenu SideMenu: LNSideMenuView, index: Int) {
+  func didSelectItemAtIndex(SideMenu: LNSideMenuView, index: Int) {
     // Forward did select item at index action
     delegate?.didSelectItemAtIndex(SideMenu: SideMenu, index: index)
   }

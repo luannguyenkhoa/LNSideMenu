@@ -16,15 +16,15 @@ class NextViewController: UIViewController {
     // Do any additional setup after loading the view.
   }
   
-  override func viewWillAppear(animated: Bool) {
+  override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     // Revert navigation bar translucent style to default
     navigationBarNonTranslecentStyle()
     // Update side menu after reverted navigation bar style
     sideMenuManager?.sideMenuController()?.sideMenu?.isNavbarHiddenOrTranslucent = false
-    
+    navigationItem.hidesBackButton = true
     // Add left bar button item
-    let leftBarItem = UIBarButtonItem(title: "Toggle", style: .Plain, target: self, action: #selector(toggleSideMenu))
+    let leftBarItem = UIBarButtonItem(title: "Toggle", style: .plain, target: self, action: #selector(toggleSideMenu))
     navigationItem.leftBarButtonItem = leftBarItem
     
     title = "Next ViewController"

@@ -12,52 +12,53 @@ import CoreGraphics
 internal class LNSideMenuView: UIView, UIScrollViewDelegate {
   
   // MARK: Constants
-  private let kNumberDefaultItemHeight: CGFloat = 60
-  private let kNumberDefaultSpace: CGFloat = 30
-  private let kNumberDefaultDistance: CGFloat = 40
-  private let kNumberDurationAnimation: CGFloat = 0.25
-  private let kNumberDefaultItemsHoziConstant: Int = 2
-  private let kNumberAriProg: Int = 10
-  private let kNumberVelocityConstant: CGFloat = 60
+  fileprivate let kNumberDefaultItemHeight: CGFloat = 60
+  fileprivate let kNumberDefaultSpace: CGFloat = 30
+  fileprivate let kNumberDefaultDistance: CGFloat = 40
+  fileprivate let kNumberDurationAnimation: CGFloat = 0.25
+  fileprivate let kNumberDefaultItemsHoziConstant: Int = 2
+  fileprivate let kNumberAriProg: Int = 10
+  fileprivate let kNumberVelocityConstant: CGFloat = 60
   
   // MARK: Variables
   var indexOfDefaultCellHighlight: Int = Int.max
   
-  private var totalCells: Int = 10
-  private var totalCellOnScreen: Int = 10
-  private var velocity: CGFloat = 0
-  private var pos: CGFloat = 0
-  private var currentIndex: Int = 0
-  private var lastContentOffset: CGFloat = 0
-  private var index: Int = 0
-  private var lastIndex: Int = 0
-  private var highlightItemWhenDidTouch: Bool = true
-  private var isDidShow: Bool = false
-  private var originalXRight: CGFloat = 0
-  private var originalXLeft: CGFloat = 0
+  fileprivate var totalCells: Int = 10
+  fileprivate var totalCellOnScreen: Int = 10
+  fileprivate var velocity: CGFloat = 0
+  fileprivate var pos: CGFloat = 0
+  fileprivate var currentIndex: Int = 0
+  fileprivate var lastContentOffset: CGFloat = 0
+  fileprivate var index: Int = 0
+  fileprivate var lastIndex: Int = 0
+  fileprivate var highlightItemWhenDidTouch: Bool = true
+  fileprivate var isDidShow: Bool = false
+  fileprivate var originalXRight: CGFloat = 0
+  fileprivate var originalXLeft: CGFloat = 0
+  fileprivate var prepared: Bool = false
   
-  private var views: NSMutableArray! = NSMutableArray()
+  fileprivate var views: [UIView]! = [UIView]()
   var items = [""]
   
   // MARK: Colors
-  var bgColor = LNDefaultColor.BackgroundColor.color()
-  var itemBackgroundColor = LNDefaultColor.ItemBackgroundColor.color()
-  var highlightItemColor = LNDefaultColor.HighlightItem.color()
-  var itemTitleColor = LNDefaultColor.ItemTitleColor.color()
+  var bgColor = LNColor.bgView.color
+  var itemBgColor = LNColor.bgItem.color
+  var highlightColor = LNColor.highlight.color
+  var titleColor = LNColor.title.color
   
   // MARK: Components
-  private var menusScrollView: UIScrollView! = UIScrollView()
-  private var panRecognizer: UIPanGestureRecognizer?
-  private var sourceView: UIView?
-  private var currentItem: UIView?
+  fileprivate var menusScrollView: UIScrollView! = UIScrollView()
+  fileprivate var panRecognizer: UIPanGestureRecognizer?
+  fileprivate var sourceView: UIView?
+  fileprivate var currentItem: UIView?
   
   // MARK: Position of SideMenu
-  var currentPosition: Position = .Left {
+  var currentPosition: Position = .left {
     didSet {
       switch currentPosition {
-      case .Left:
+      case .left:
         self.setupMenusAtLeft()
-      case .Right:
+      case .right:
         self.setupMenusAtRight()
       }
     }
@@ -82,49 +83,49 @@ internal class LNSideMenuView: UIView, UIScrollViewDelegate {
    
    :param: sourceView the parent view
    */
-  func setupMenu(sourceView: UIView, position: Position) {
+  func setupMenu(_ sourceView: UIView, position: Position) {
     
     self.sourceView = sourceView
     // Initialize view frame
-    let xpos = position == .Left ? 0 : CGRectGetWidth(sourceView.frame)/2
-    self.frame = CGRectMake(xpos, 0, CGRectGetWidth(sourceView.frame)/2, CGRectGetHeight(sourceView.frame))
+    let xpos = position == .left ? 0 : sourceView.width/2
+    self.frame = CGRect(x: xpos, y: 0, width: sourceView.width/2, height: sourceView.height)
     
     // Initialize main scrollview and setting colors
-    self.backgroundColor = .clearColor()
+    self.backgroundColor = .clear
     
     // Initial main scrollView
-    self.initializeMenuScrollView |> (position == .Right)
+    self.initializeMenuScrollView |> (position == .right)
     
     // Set menu position on superview
     currentPosition = position
     
     // Drawing a background view
-    self.drawRect |> self.frame
+    self.draw(_:) |> self.frame
     currentItem = menusScrollView.viewWithTag |> indexOfDefaultCellHighlight
     
     // Add self to parent view
     sourceView.addSubview |> self
-    sourceView.bringSubviewToFront |> self
+    sourceView.bringSubview(toFront:) |> self
     
   }
   
-  func refreshMenuWithFrame(frame: CGRect, isChanged: Bool) {
+  func refreshMenuWithFrame(_ frame: CGRect, isChanged: Bool) {
     // Clear drawn shape in self
     clearDrawRect(self.frame)
     // Update height
-    self.frame.size.height = CGRectGetHeight(frame)
+    self.height = frame.height
     // Re-draw shape in self
-    drawRect(self.frame)
+    draw(self.frame)
     // Update x position of scrollview
     let distanceToTop = isChanged ? navigationBarHeight : kNumberDefaultSpace
-    self.menusScrollView.frame.origin.y = distanceToTop
+    self.menusScrollView.y = distanceToTop
   }
   
   func refresh() {
     // Remove all current items
     menusScrollView.subviews.forEach{ $0.removeFromSuperview() }
     // Reinit menus view with the new list of items
-    initialItems |> currentPosition == .Right
+    initialItems(currentPosition == .right)
   }
   
   // Forcing stop scrolling scrollview
@@ -136,19 +137,19 @@ internal class LNSideMenuView: UIView, UIScrollViewDelegate {
   /**
    Initialize Menu scrollview, which contain all items
    */
-  private func initializeMenuScrollView(isRight: Bool) {
+  fileprivate func initializeMenuScrollView(_ isRight: Bool) {
     // Config menu scrollview
     menusScrollView.delegate = self
-    menusScrollView.scrollEnabled = true
-    menusScrollView.backgroundColor = UIColor.clearColor()
+    menusScrollView.isScrollEnabled = true
+    menusScrollView.backgroundColor = UIColor.clear
     menusScrollView.showsVerticalScrollIndicator = false
     menusScrollView.showsHorizontalScrollIndicator = false
     
     // Calculate total cells be able displayed on screen
     
-    let space: CGFloat = self.frame.size.height - kNumberDefaultSpace
+    let space: CGFloat = self.height - kNumberDefaultSpace
     var frame = self.frame
-    frame.size.width = isRight ? frame.size.width : frame.size.width - kNumberDefaultDistance
+    frame.width = isRight ? frame.width : frame.width - kNumberDefaultDistance
     totalCellOnScreen = items.count
     
     var height: CGFloat = CGFloat(Int(kNumberDefaultItemHeight) * totalCellOnScreen)
@@ -156,7 +157,7 @@ internal class LNSideMenuView: UIView, UIScrollViewDelegate {
       totalCellOnScreen -= 1
       height = CGFloat(kNumberDefaultItemHeight) * CGFloat(totalCellOnScreen)
     }
-    frame.size.height = height + 10
+    frame.height = height + 10
     
     totalCells = items.count
     // The number of items on screen is always an odd, because it helps to calculate frames of items more easier and cooler
@@ -167,22 +168,22 @@ internal class LNSideMenuView: UIView, UIScrollViewDelegate {
     currentIndex = Int(totalCellOnScreen/2)
     index = currentIndex
     // Calculate frame of scrollview
-    frame.origin.y = kNumberDefaultSpace
-    frame.origin.x = isRight ? kNumberDefaultDistance : 0
+    frame.y = kNumberDefaultSpace
+    frame.x = isRight ? kNumberDefaultDistance : 0
     menusScrollView.frame = frame
   }
   
   /**
    Setup Menu at the screen right
    */
-  private func setupMenusAtRight() {
+  fileprivate func setupMenusAtRight() {
     initialItems |> true
   }
   
   /**
    Setup Menu at the screen left
    */
-  private func setupMenusAtLeft() {
+  fileprivate func setupMenusAtLeft() {
     initialItems |> false
   }
   /**
@@ -190,23 +191,25 @@ internal class LNSideMenuView: UIView, UIScrollViewDelegate {
    
    - parameter right: position of side menu
    */
-  private func initialItems(right: Bool) {
+  fileprivate func initialItems(_ right: Bool) {
     if items.count == 0 {
       return
     }
     if totalCells < 0 {
       return
     }
+    // Clear all subviews before adding new ones
+    views.removeAll()
     for index in 0 ..< totalCells {
       // Calculate item frame by its index
       let dest = abs(index-currentIndex)
-      let sum = (0..<dest).reduce(0, combine: { $0 + $1*kNumberAriProg })
+      let sum = (0..<dest).reduce(0, { $0 + $1*kNumberAriProg })
       let originX = (right ? 1 : -1) * CGFloat(sum + kNumberDefaultItemsHoziConstant*dest)
-      let itemFrame = CGRectMake(originX, CGFloat(index*Int(kNumberDefaultItemHeight)), menusScrollView.frame.size.width, kNumberDefaultItemHeight)
+      let itemFrame = CGRect(x: originX, y: CGFloat(index*Int(kNumberDefaultItemHeight)), width: menusScrollView.width, height: kNumberDefaultItemHeight)
       
       // Initial item by index
       let itemView = LNItemView()
-      itemView.setupView |> (itemFrame, items[index], index==indexOfDefaultCellHighlight, right, itemTitleColor, highlightItemColor, itemBackgroundColor)
+      itemView.setupView |> (itemFrame, items[index], index==indexOfDefaultCellHighlight, right, titleColor, highlightColor, itemBgColor)
       itemView.tag = index
       // add single tap gesture for each item of menu
       let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapContentView(_:)))
@@ -215,9 +218,9 @@ internal class LNSideMenuView: UIView, UIScrollViewDelegate {
       // Add item to scrollview
       self.menusScrollView.addSubview |> itemView
       // Cache list of items
-      views.addObject |> itemView
+      views.append(itemView)
     }
-    menusScrollView.contentSize = CGSizeMake(menusScrollView.frame.size.width, CGFloat(totalCells*Int(kNumberDefaultItemHeight)))
+    menusScrollView.contentSize = CGSize(width: menusScrollView.width, height: CGFloat(totalCells*Int(kNumberDefaultItemHeight)))
     self.addSubview |> self.menusScrollView
   }
   
@@ -226,7 +229,7 @@ internal class LNSideMenuView: UIView, UIScrollViewDelegate {
   /**
    Change items frame when the user scrolling
    */
-  private func animationToIndex(index: Int, animated: Bool) {
+  fileprivate func animationToIndex(_ index: Int, animated: Bool) {
     
     var animate = animated
     var speed: CGFloat = 0
@@ -250,36 +253,36 @@ internal class LNSideMenuView: UIView, UIScrollViewDelegate {
   /**
    Get origin x postion of current item in the next frame
    */
-  private func getXpos(dest: Int) -> CGFloat {
+  fileprivate func getXpos(_ dest: Int) -> CGFloat {
     let cdest = dest < 0 ? 0 : dest
-    let sum = (0..<cdest).reduce(0, combine: {$0 + $1*kNumberAriProg})
-    let xpos = currentPosition == .Right ? CGFloat(sum + kNumberDefaultItemsHoziConstant*cdest) : -CGFloat(sum + kNumberDefaultItemsHoziConstant*cdest)
+    let sum = (0..<cdest).reduce(0, {$0 + $1*kNumberAriProg})
+    let xpos = currentPosition == .right ? CGFloat(sum + kNumberDefaultItemsHoziConstant*cdest) : -CGFloat(sum + kNumberDefaultItemsHoziConstant*cdest)
     return xpos
   }
   
   /**
    Update frame of current item by offset value
    */
-  private func updateXpos(frame: CGRect, offset: CGFloat, dist: CGFloat, plus: Bool) -> CGRect {
+  fileprivate func updateXpos(_ frame: CGRect, offset: CGFloat, dist: CGFloat, plus: Bool) -> CGRect {
     let num: CGFloat = plus ? 1 : -1
     var frame = frame
-    frame.origin.x += (currentPosition == .Right ? num: -num) * (offset * dist / kNumberDefaultItemHeight)
+    frame.x += (currentPosition == .right ? num: -num) * (offset * dist / kNumberDefaultItemHeight)
     return frame
   }
   
   /**
    Update items frame by scrollview content offset
    */
-  private func changeItemsFrameByOffset(scrollUp: Bool, offset: CGFloat, currentIndex: Int) {
+  fileprivate func changeItemsFrameByOffset(_ scrollUp: Bool, offset: CGFloat, currentIndex: Int) {
     var currentViewIndex = 0
     for view in views {
       var dest = abs(currentViewIndex-currentIndex)
       if currentViewIndex <= currentIndex { dest += scrollUp ? 1 : -1 } else { dest -= scrollUp ? 1 : -1 }
       let xpos = self.getXpos(dest)
       let frame = view.frame
-      let dist = abs(view.frame.origin.x - xpos)
+      let dist = abs(view.x - xpos)
       let plus = scrollUp ? currentViewIndex <= currentIndex : !(currentViewIndex <= currentIndex)
-      (view as! LNItemView).frame = self.updateXpos(frame, offset: offset, dist: dist, plus: plus)
+      view.frame = self.updateXpos(frame, offset: offset, dist: dist, plus: plus)
       currentViewIndex += 1
     }
   }
@@ -287,46 +290,96 @@ internal class LNSideMenuView: UIView, UIScrollViewDelegate {
   /**
    Update item frame if it's current item
    */
-  private func updateItemViewWidth(currentView: LNItemView, speed: CGFloat) {
+  fileprivate func updateItemViewWidth(_ currentView: LNItemView, speed: CGFloat) {
     animateUpdateView { return 0 } |> (currentView, speed)
   }
   
   /**
    Update other items frame
    */
-  private func updateItemViewFor(itemView: LNItemView, index: Int, current: Int, speed: CGFloat) {
+  fileprivate func updateItemViewFor(_ itemView: LNItemView, index: Int, current: Int, speed: CGFloat) {
     animateUpdateView { [unowned self] _ in
       let dest = abs(index-current)
-      let sum = (0..<dest).reduce(0, combine: {$0 + $1*self.kNumberAriProg})
-      let originX = self.currentPosition == .Right ? CGFloat(sum + 2*dest) : -CGFloat(sum + self.kNumberDefaultItemsHoziConstant*dest)
+      let sum = (0..<dest).reduce(0, {$0 + $1*self.kNumberAriProg})
+      let originX = self.currentPosition == .right ? CGFloat(sum + 2*dest) : -CGFloat(sum + self.kNumberDefaultItemsHoziConstant*dest)
       return originX
     } |> (itemView, speed)
   }
   
-  private func animateUpdateView<A: UIView>(calculateX: () -> CGFloat) -> (A, CGFloat) -> () {
+  fileprivate func animateUpdateView<A: UIView>(_ calculateX: () -> CGFloat) -> (A, CGFloat) -> () {
     let xpos = calculateX()
     return { view, speed in
-      UIView.animateWithDuration(NSTimeInterval(speed), delay: 0, options: .CurveLinear, animations: { () -> Void in
-        view.frame.origin.x = xpos
+      UIView.animate(withDuration: TimeInterval(speed), delay: 0, options: .curveLinear, animations: { () -> Void in
+        view.x = xpos
         }, completion: nil)
       UIView.commitAnimations()
     }
+  }
+  
+  internal func prepareForAnimation() {
+    for item in views {
+      animateItemByUpdatingXpos(item: item, isIn: false)
+    }
+    prepared = true
+  }
+  
+  internal func animateContents() {
+    // Check if the animation was prepared before then performing animation
+    if prepared {
+      // Animate
+      prepared = false
+      var startIdx: Int = Int(floor(menusScrollView.contentOffset.y / (views.first?.height ?? 1)))
+      if 0..<views.count ~= startIdx {
+        startIdx = startIdx == 0 ? 0 : startIdx - 1
+        animation |> (startIdx, views.count, startIdx == 0)
+        if startIdx > 0 { animation |> (0, startIdx, true) }
+      }
+    }
+  }
+  
+  fileprivate func animation(startIdx: Int, endIdx: Int, end: Bool) {
+    let duration = 0.25
+    var delay: TimeInterval = 0
+    let sum = views.count
+    for idx in startIdx..<endIdx where 0..<sum ~= idx {
+      UIView.animate(withDuration: duration, delay: delay, options: .curveEaseInOut, animations: {
+        self.animateItemByUpdatingXpos(item: self.views[idx], isIn: true)
+        }, completion: { _ in
+          if idx == endIdx-1 && end { self.prepared = true }
+      })
+      UIView.commitAnimations()
+      // Increasing delay time by animation time after each animation performed that will playing animations by order
+      delay += duration/3
+    }
+  }
+  
+  fileprivate func animateItemByUpdatingXpos(item: UIView, isIn: Bool) {
+    if currentPosition == .left {
+      isIn ? math(+=, &item.x, item.width) : math(-=, &item.x, item.width)
+    } else {
+      let width = item.width + kDistanceItemToRight
+      isIn ? math(-=, &item.x, width) : math(+=, &item.x, width)
+    }
+  }
+  // A functional that handling mathematic method
+  fileprivate func math<A>(_ f: (_ lhs: inout A, _ rhs: A) -> (), _ fParam: inout A, _ sParam: A) {
+    f(&fParam, sParam)
   }
   
   // MARK: SideMenuDelegate
   /**
    Did tap on item handler
    */
-  func didTapContentView(sender: UIGestureRecognizer) {
+  func didTapContentView(_ sender: UIGestureRecognizer) {
     let view = sender.view
     let index = view?.tag
     delegate?.didSelectItemAtIndex(SideMenu: self, index: index ?? 0)
     if highlightItemWhenDidTouch {
       if let label = currentItem?.viewWithTag(101) as? UILabel {
-        label.textColor = itemTitleColor
+        label.textColor = titleColor
       }
       if let currentLabel = view?.viewWithTag(101) as? UILabel {
-        currentLabel.textColor = highlightItemColor
+        currentLabel.textColor = highlightColor
       }
       currentItem = view
     }
@@ -336,7 +389,7 @@ internal class LNSideMenuView: UIView, UIScrollViewDelegate {
   /**
    Handle scrolling and change items frame on the view
    */
-  func scrollViewDidScroll(scrollView: UIScrollView) {
+  func scrollViewDidScroll(_ scrollView: UIScrollView) {
     
     let yOffset = scrollView.contentOffset.y
     velocity = pos - yOffset
@@ -379,54 +432,56 @@ internal class LNSideMenuView: UIView, UIScrollViewDelegate {
    For more details: https://developer.apple.com/library/mac/documentation/GraphicsImaging/Reference/CGContext/
    */
   
-  private func clearDrawRect(rect: CGRect) {
+  fileprivate func clearDrawRect(_ rect: CGRect) {
     guard let context = UIGraphicsGetCurrentContext() else { return }
-    CGContextClearRect(context, rect)
-    CGContextClosePath(context)
+    context.clear(rect)
+    context.closePath()
   }
   
   /**
    Draw a shape with a curve line and 3 straight lines on the owner view
    */
-  override  func drawRect(rect: CGRect) {
+  override  func draw(_ rect: CGRect) {
     guard let context = UIGraphicsGetCurrentContext() else { return }
     let size = rect.size
-    CGContextSetStrokeColorWithColor(context, UIColor.clearColor().CGColor);
-    CGContextSetLineWidth(context, 3)
+    context.setStrokeColor(UIColor.clear.cgColor);
+    context.setLineWidth(3)
     // Draw the polygon
-    if currentPosition == .Left {
+    if currentPosition == .left {
       self.drawShapeForLeftView(currentContext: context, size: size)
     } else {
       self.drawShapeForRightView(currentContext: context, size: size)
     }
     
     // Fill it
-    CGContextSetFillColorWithColor(context, bgColor.CGColor)
+    context.setFillColor(bgColor.cgColor)
     
     // Stroke it
-    CGContextDrawPath(context, .FillStroke)
+    context.drawPath(using: .fillStroke)
+    // End context
+    UIGraphicsEndImageContext()
   }
   
   /**
    Draw a shape for left view, this func is called when the SideMenu on the screen left
    */
-  private func drawShapeForLeftView(currentContext currentContext: CGContext, size: CGSize) {
-    CGContextMoveToPoint(currentContext, 0, 0)
-    CGContextAddLineToPoint(currentContext, size.width/2.4 ,0)
-    CGContextAddQuadCurveToPoint(currentContext, size.width + size.width/2, size.height/2, size.width/2.4, size.height)
-    CGContextAddLineToPoint(currentContext, 0, size.height) // base
-    CGContextAddLineToPoint(currentContext, 0, 0); // right border
+  fileprivate func drawShapeForLeftView(currentContext: CGContext, size: CGSize) {
+    currentContext.move(to: CGPoint(x: 0, y: 0))
+    currentContext.addLine(to: CGPoint(x: size.width/2.4, y: 0))
+    currentContext.addQuadCurve(to: CGPoint(x: size.width/2.4, y: size.height), control: CGPoint(x: size.width + size.width/2, y: size.height/2))
+    currentContext.addLine(to: CGPoint(x: 0, y: size.height)) // base
+    currentContext.addLine(to: CGPoint(x: 0, y: 0)); // right border
   }
   
   /**
    Draw a shape for right view, this func is called when the SideMenu on the screen right
    */
-  private func drawShapeForRightView(currentContext currentContext: CGContext, size: CGSize) {
-    CGContextMoveToPoint(currentContext, size.width, 0)
-    CGContextAddLineToPoint(currentContext, size.width - size.width/2.4 ,0)
-    CGContextAddQuadCurveToPoint(currentContext, -size.width/2, size.height/2, size.width - size.width/2.4, size.height)
-    CGContextAddLineToPoint(currentContext, size.width, size.height) // base
-    CGContextAddLineToPoint(currentContext, size.width, 0); // right border
+  fileprivate func drawShapeForRightView(currentContext: CGContext, size: CGSize) {
+    currentContext.move(to: CGPoint(x: size.width, y: 0))
+    currentContext.addLine(to: CGPoint(x: size.width - size.width/2.4, y: 0))
+    currentContext.addQuadCurve(to: CGPoint(x: size.width - size.width/2.4, y: size.height), control: CGPoint(x: -size.width/2, y: size.height/2))
+    currentContext.addLine(to: CGPoint(x: size.width, y: size.height)) // base
+    currentContext.addLine(to: CGPoint(x: size.width, y: 0)); // right border
   }
   
 }

@@ -10,38 +10,57 @@ import UIKit
 import ObjectiveC
 
 // MARK: Global variables
-internal let screenHeight = UIScreen.mainScreen().bounds.size.height
-internal let screenWidth = UIScreen.mainScreen().bounds.size.width
+internal let screenHeight = UIScreen.main.bounds.height
+internal let screenWidth = UIScreen.main.bounds.width
 internal let navigationBarHeight: CGFloat = 64
+internal let kDistanceItemToRight: CGFloat = 18
 
 // MARK: Enums
 public enum Position {
-  case Right
-  case Left
+  case right
+  case left
 }
 
 public enum LNSideMenuAnimation {
-  case None
-  case Default
+  case none
+  case `default`
 }
 
-public enum LNDefaultColor {
+public enum LNSize {
   
-  case HighlightItem
-  case ItemTitleColor
-  case ItemBackgroundColor
-  case BackgroundColor
+  case full
+  case half
+  case twothird
   
-  public func color() -> UIColor {
+  public var width: CGFloat {
     switch self {
-    case .HighlightItem:
-      return .redColor()
-    case .ItemTitleColor:
-      return .blackColor()
-    case .ItemBackgroundColor:
-      return .whiteColor()
-    case .BackgroundColor:
-      return .purpleColor()
+    case .full:
+      return UIScreen.main.bounds.width
+    case .twothird:
+      return UIScreen.main.bounds.width * 2 / 3
+    case .half:
+      return UIScreen.main.bounds.width / 2
+    }
+  }
+}
+
+public enum LNColor {
+  
+  case highlight
+  case title
+  case bgItem
+  case bgView
+  
+  public var color: UIColor {
+    switch self {
+    case .highlight:
+      return .red
+    case .title:
+      return .black
+    case .bgItem:
+      return .white
+    case .bgView:
+      return .purple
     }
   }
 }
@@ -51,20 +70,20 @@ public enum LNDefaultColor {
 public protocol LNSideMenuProtocol {
   var sideMenu: LNSideMenu?{get}
   var sideMenuAnimationType: LNSideMenuAnimation {get set}
-  func setContentViewController(contentViewController: UIViewController)
+  func setContentViewController(_ contentViewController: UIViewController)
 }
 
 internal protocol LNSMDelegate: class {
-  func didSelectItemAtIndex(SideMenu SideMenu: LNSideMenuView, index: Int)
+  func didSelectItemAtIndex(SideMenu: LNSideMenuView, index: Int)
 }
 
 @objc public protocol LNSideMenuDelegate {
-  optional func sideMenuWillOpen()
-  optional func sideMenuWillClose()
-  optional func sideMenuDidOpen()
-  optional func sideMenuDidClose()
-  optional func sideMenuShouldOpenSideMenu () -> Bool
-  func didSelectItemAtIndex(index: Int)
+  @objc optional func sideMenuWillOpen()
+  @objc optional func sideMenuWillClose()
+  @objc optional func sideMenuDidOpen()
+  @objc optional func sideMenuDidClose()
+  @objc optional func sideMenuShouldOpenSideMenu () -> Bool
+  func didSelectItemAtIndex(_ index: Int)
 }
 
 public protocol LNSideMenuManager {
@@ -77,13 +96,14 @@ public protocol LNSideMenuManager {
 }
 
 // MARK: Extensions
+var sideMenuMg: LNSideMenuManagement = LNSideMenuManagement()
+
 public extension UIViewController {
   // A protocol as a store property
   public var sideMenuManager: LNSideMenuManager? {
     get {
-      return associatedObject(self, key: &AssociatedKeys.LNSideMenuManagerAssociatedKey) {
-        return Associated<LNSideMenuManager>(LNSideMenuManagement(viewController: self))
-      }
+      sideMenuMg.viewController = self
+      return sideMenuMg
     }
     set { }
   }
@@ -97,70 +117,25 @@ public extension UIViewController {
     navigationBarEffect |> false
   }
   
-  private func navigationBarEffect(translucent: Bool) {
-    navigationController?.navigationBar.translucent = translucent
-    navigationController?.navigationBar.setBackgroundImage(UIImage(), forBarPosition: .Top, barMetrics: .Default)
+  fileprivate func navigationBarEffect(_ translucent: Bool) {
+    navigationController?.navigationBar.isTranslucent = translucent
+    navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .top, barMetrics: .default)
     navigationController?.navigationBar.shadowImage = UIImage()
   }
 }
 
-// MARK: Associatation
-internal final class Associated<T>: NSObject, NSCopying {
-  internal typealias Type = T
-  internal let value: Type
-  
-  internal init(_ value: Type) { self.value = value }
-  
-  internal func copyWithZone(zone: NSZone) -> AnyObject {
-    return self.dynamicType.init(value)
-  }
-}
-
-extension Associated where T: NSCopying {
-  internal func copyWithZone(zone: NSZone) -> AnyObject {
-    return self.dynamicType.init(value.copyWithZone(zone) as! Type)
-  }
-}
-
-private struct AssociatedKeys {
-  static var LNSideMenuManagerAssociatedKey = "LNSideMenuManagerAssociatedKey"
-}
-
-private func associatedObject<ValueType: Associated<LNSideMenuManager>>(
-  base: AnyObject,
-  key: UnsafePointer<String>,
-  initialiser: () -> ValueType)
-  -> LNSideMenuManager? {
-    if let associated = objc_getAssociatedObject(base, key)
-      as? ValueType {
-      return associated.value
-    }
-    let associated = initialiser()
-    objc_setAssociatedObject(base, key, associated,
-                             .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-    return associated.value
-}
-
-private func associateObject<ValueType: Associated<LNSideMenuManager>>(
-  base: AnyObject,
-  key: UnsafePointer<UInt8>,
-  value: ValueType) {
-  objc_setAssociatedObject(base, key, value,
-                           .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-}
-
 // MARK: Operator overloading
-infix operator |> {associativity left}
+infix operator |>: AdditionPrecedence
 
-internal func |> <A>(inout arg: A, param: A) {
+internal func |> <A>(arg: inout A, param: A) {
   arg = param
 }
 
-internal func |><A, B> (f: A->B, arg: A) -> B {
+internal func |><A, B> (f: (A)->B, arg: A) -> B {
   return f(arg)
 }
 
-internal func |> <A, B, C> (f: A-> B, g: B->C) -> A -> C {
+internal func |> <A, B, C> (f: @escaping (A)-> B, g: @escaping (B)->C) -> (A) -> C {
   return { g(f($0)) }
 }
 
@@ -204,5 +179,50 @@ internal func |><A, B, C, D, E, F, G, H, I, J> (f: (A, B, C, D, E, F, G, H, I, J
   f(arg.0, arg.1, arg.2, arg.3, arg.4, arg.5, arg.6, arg.7, arg.8, arg.9)
 }
 
+// Getting frame's components
+extension CGRect {
+  
+  var x: CGFloat {
+    get { return self.origin.x }
+    set { self.origin.x = newValue }
+  }
+  
+  var y: CGFloat {
+    get { return self.origin.y }
+    set { self.origin.y = newValue }
+  }
+  
+  var width: CGFloat {
+    get { return self.size.width }
+    set { self.size.width = newValue }
+  }
+  
+  var height: CGFloat {
+    get { return self.size.height }
+    set { self.size.height = newValue }
+  }
+}
 
-
+extension UIView {
+  
+  var x: CGFloat {
+    get { return self.frame.x }
+    set { self.frame.x = newValue }
+  }
+  
+  var y: CGFloat {
+    get { return self.frame.y }
+    set { self.frame.y = newValue }
+  }
+  
+  var width: CGFloat {
+    get { return self.frame.width }
+    set { self.frame.width = newValue }
+  }
+  
+  var height: CGFloat {
+    get { return self.frame.height }
+    set { self.frame.height = newValue }
+  }
+  
+}

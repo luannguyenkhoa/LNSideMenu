@@ -10,7 +10,7 @@ import UIKit
 
 internal class LNItemView: UIView {
   
-  private var titleLabel = UILabel()
+  fileprivate var titleLabel = UILabel()
   
   override init(frame: CGRect) {
     super.init(frame: frame)
@@ -20,34 +20,34 @@ internal class LNItemView: UIView {
     fatalError("init(coder:) has not been implemented")
   }
   
-  internal func setupView(frame: CGRect, title: String, isHighlight: Bool, isRight: Bool, textColor: UIColor, highlightTextColor: UIColor, backgroundColor: UIColor) {
+  internal func setupView(_ frame: CGRect, title: String, isHighlight: Bool, isRight: Bool, textColor: UIColor, highlightTextColor: UIColor, backgroundColor: UIColor) {
     var customFrame = frame
-    customFrame.origin.y += 10
-    customFrame.size.height = 40
+    customFrame.y += 10
+    customFrame.height = 40
     self.frame = customFrame
     self.backgroundColor = backgroundColor
-    let corner: UIRectCorner = isRight ? [.TopLeft, .BottomLeft]: [.TopRight, .BottomRight]
-    self.setCornerRadius(view: self, corner: corner, size: CGSizeMake(20, 20))
+    let corner: UIRectCorner = isRight ? [.topLeft, .bottomLeft]: [.topRight, .bottomRight]
+    self.setCornerRadius(view: self, corner: corner, size: CGSize(width: 20, height: 20))
     
     titleLabel.textColor = isHighlight ? highlightTextColor : textColor
     titleLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 13)
-    titleLabel.textAlignment = NSTextAlignment.Right
+    titleLabel.textAlignment = NSTextAlignment.right
     titleLabel.text = title
-    var labelFrame = CGRectMake(0, 0, customFrame.size.width-18, customFrame.size.height)
+    var labelFrame = CGRect(x: 0, y: 0, width: customFrame.width-kDistanceItemToRight, height: customFrame.height)
     if isRight {
-      labelFrame.origin.x = 18
-      titleLabel.textAlignment = NSTextAlignment.Left
+      labelFrame.x = kDistanceItemToRight
+      titleLabel.textAlignment = NSTextAlignment.left
     }
     titleLabel.frame = labelFrame
     titleLabel.tag = 101
     self.addSubview(titleLabel)
   }
   
-  private func setCornerRadius(view view: UIView, corner: UIRectCorner, size: CGSize) {
+  fileprivate func setCornerRadius(view: UIView, corner: UIRectCorner, size: CGSize) {
     let maskPath = UIBezierPath(roundedRect: view.bounds, byRoundingCorners: corner, cornerRadii: size)
     let maskLayer = CAShapeLayer()
     maskLayer.frame = view.bounds
-    maskLayer.path = maskPath.CGPath
+    maskLayer.path = maskPath.cgPath
     view.layer.mask = maskLayer
   }
 }
