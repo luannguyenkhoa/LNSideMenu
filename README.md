@@ -5,7 +5,7 @@
 [![License](https://img.shields.io/cocoapods/l/LNSideMenu.svg?style=flat)](http://cocoapods.org/pods/LNSideMenu)
 [![Platform](https://img.shields.io/cocoapods/p/LNSideMenu.svg?style=flat)](http://cocoapods.org/pods/LNSideMenu)
 
-SideMenu library that such as a lot of sidemenu libraries for iOS are currently existentialism on Github. The main feature of this library: there has a custom menu view that automatically attached as a default menu. That menu view was implemented many effects and animations like scrolling effect, fade animation for displaying the menu's items,..
+SideMenu library that such as a lot of sidemenu libraries on Github for iOS. The main feature of this library: there has a custom menu view that automatically attached as a default menu, but you can use your own menu instead. That menu view was implemented many effects and animations like scrolling effect, fade animation for displaying the menu's items,..
 Check it out and explore what it can do.
 
 ![Demo](https://cloud.githubusercontent.com/assets/13121441/19177073/0ca0ce0e-8c70-11e6-9e12-d67e7947d98d.gif)
@@ -17,15 +17,12 @@ Check it out and explore what it can do.
 
 . Initilize the menu view with a source view:
 ```swift
-override func viewDidLoad() {
-super.viewDidLoad()
-
-// Do any additional setup after loading the view.
-let items = ["All","Hot Food","Sandwiches","Hot Pots","Hot Rolls", "Salads","Pies","Dessrts","Drinks","Breakfast","Cookies","Lunch"]
-sideMenu = LNSideMenu(sourceView: view, menuPosition: .Left, items: items)
-// One more optional parameter is highlighItemAtIndex (Int)
-sideMenu?.delegate = self
-view.bringSubviewToFront(navigationBar)
+func initialSideMenu(_ position: Position) {
+    sideMenu = LNSideMenu(sourceView: view, menuPosition: position, items: items!)
+    sideMenu?.menuViewController?.menuBgColor = UIColor.black.withAlphaComponent(0.85)
+    sideMenu?.delegate = self
+    // Bring navigationBar to front if you want
+    view.bringSubview(toFront: navigationBar)
 }
 ```
 . Implementing delegate methods: didSelectItemAtIndex,..
@@ -45,7 +42,7 @@ self.setContentViewController(destViewController)
 self.sideMenuManager?.toggleSideMenuView()
 ```
 
-. It has a feature for navigation bar translucent. To use this feature, just add code as below:
+. It has a feature for navigation bar translucent. In order to using this feature, just add code as below:
 ```swift
 self.navigationBarTranslucentStyle()
 sideMenuManager?.sideMenuController()?.sideMenu?.isNavbarHiddenOrTranslucent = true
@@ -57,11 +54,16 @@ sideMenuManager?.sideMenuController()?.sideMenu?.isNavbarHiddenOrTranslucent = t
 
 Initialize side menu using function 
 ```swift 
-sideMenu = LNSideMenu(sourceView source: UIView, pos: Position, customSideMenu: UIViewController)
-``` 
-instead of 
-```swift 
-sideMenu = LNSideMenu(sourceView: view, menuPosition: position, items: items!)
+func initialCustomMenu(pos position: Position) {
+    let menu = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "LeftMenuTableViewController") as! LeftMenuTableViewController
+    menu.delegate = self
+    sideMenu = LNSideMenu(sourceView: view, menuPosition: position, customSideMenu: menu)
+    sideMenu?.delegate = self
+    // Enable dynamic animator
+    sideMenu?.enableDynamic = true
+    // Moving down the menu view under navigation bar
+    sideMenu?.underNavigationBar = true
+}
 ``` 
 in NavigationController subclassing.
 
@@ -97,7 +99,7 @@ LNSideMenu is available through [CocoaPods](http://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
 ```ruby
-pod 'LNSideMenu', '~> 2.0'
+pod 'LNSideMenu', '~> 2.0.0'
 ```
 
 ### Manual
@@ -106,7 +108,7 @@ Adding all files in LNSideMenu folder to your project folder
 
 ## TODO
 
-. Changing container viewcontroller animation
+. Changing content viewcontroller animation
 
 ## Contribution
 
