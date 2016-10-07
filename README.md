@@ -8,8 +8,8 @@
 SideMenu library that such as a lot of sidemenu libraries for iOS are currently existentialism on Github. The main feature of this library: there has a custom menu view that automatically attached as a default menu. That menu view was implemented many effects and animations like scrolling effect, fade animation for displaying the menu's items,..
 Check it out and explore what it can do.
 
-![Demo](https://cloud.githubusercontent.com/assets/13121441/19163883/f8890596-8c27-11e6-9619-3f8c233e36c0.gif)
-![Demo](https://cloud.githubusercontent.com/assets/13121441/19163886/fa162682-8c27-11e6-830b-0b745215a5cd.gif)
+![Demo](https://cloud.githubusercontent.com/assets/13121441/19177073/0ca0ce0e-8c70-11e6-9e12-d67e7947d98d.gif)
+![Demo](https://cloud.githubusercontent.com/assets/13121441/19177074/0cd3415e-8c70-11e6-8082-5057bf406e42.gif)
 
 ## Usage
 
