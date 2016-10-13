@@ -99,7 +99,7 @@ LNSideMenu is available through [CocoaPods](http://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
 ```ruby
-pod 'LNSideMenu', '~> 2.0.0'
+pod 'LNSideMenu', '~> 2.1'
 ```
 
 ### Manual
