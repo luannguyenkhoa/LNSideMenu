@@ -31,7 +31,7 @@ open class LNSideMenuNavigationController: UINavigationController, LNSideMenuPro
       break
     }
   }
-  
+
   /*
    The app will not supports the device rotation, it's perfectly compatible with the portrait mode.
    Because the design will be broken in the landscape mode.

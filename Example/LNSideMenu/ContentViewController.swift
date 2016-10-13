@@ -12,7 +12,7 @@ class ContentViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    // Disable sidemenu
+    // Disable sidemene
     sideMenuManager?.sideMenuController()?.sideMenu?.disabled = true
   }
   

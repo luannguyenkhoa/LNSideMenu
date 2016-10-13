@@ -10,6 +10,8 @@ import LNSideMenu
 
 class ViewController: UIViewController {
   
+  @IBOutlet weak var imageView: UIImageView!
+  @IBOutlet weak var barButton: UIBarButtonItem!
   override func viewDidLoad() {
     super.viewDidLoad()
     // Do any additional setup after loading the view, typically from a nib.
@@ -18,14 +20,21 @@ class ViewController: UIViewController {
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
+    
+    // FIXME: Remove code below if u're using your own menu
+    setupNavforDefaultMenu()
+  }
+
+  private func setupNavforDefaultMenu() {
+    barButton.image = UIImage(named: "burger")?.withRenderingMode(.alwaysOriginal)
     // Set navigation bar translucent style
     self.navigationBarTranslucentStyle()
     // Update side menu
-    sideMenuManager?.sideMenuController()?.sideMenu?.isNavbarHiddenOrTranslucent = true
+    sideMenuManager?.sideMenuController()?.sideMenu?.isNavbarHiddenOrTransparent = true
     // Re-enable sidemenu
     sideMenuManager?.sideMenuController()?.sideMenu?.disabled = false
   }
-
+  
   @IBAction func toogleSideMenu(_ sender: AnyObject) {
     sideMenuManager?.toggleSideMenuView()
   }
@@ -36,4 +45,3 @@ class ViewController: UIViewController {
   }
   
 }
-

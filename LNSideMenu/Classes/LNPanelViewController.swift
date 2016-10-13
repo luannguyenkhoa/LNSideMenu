@@ -8,7 +8,7 @@
 
 import UIKit
 
-open class LNPanelViewController: UIViewController {
+public final class LNPanelViewController: UIViewController {
   
   // MARK: Properties
   fileprivate var items: [String] = []
@@ -44,7 +44,10 @@ open class LNPanelViewController: UIViewController {
   
   open override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    initialSideMenu()
+    if !didInit {
+      didInit = true
+      initialSideMenu()
+    }
   }
   /**
    Initial side menu with components
@@ -87,9 +90,9 @@ open class LNPanelViewController: UIViewController {
     sideMenuView.prepareForAnimation()
   }
   
-  internal func animateContents() {
+  internal func animateContents(completion: @escaping Completion) {
     // Animate items when it's about diplayed
-    sideMenuView.animateContents()
+    sideMenuView.animateContents(completion: completion)
   }
   
   internal func transitionToView() {

@@ -43,6 +43,11 @@ class LeftMenuTableViewController: UIViewController {
     // Dispose of any resources that can be recreated.
   }
   
+  override func viewWillLayoutSubviews() {
+    super.viewWillLayoutSubviews()
+//    menuTableView.reloadSections(IndexSet(integer: 0), with: .none)
+  }
+  
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
     // Circle avatar imageview
@@ -62,7 +67,6 @@ class LeftMenuTableViewController: UIViewController {
     userAvatarImg.layer.shadowPath = UIBezierPath(rect: userAvatarImg.bounds).cgPath
     userAvatarImg.layer.shouldRasterize = true
   }
-  
 }
 
 extension LeftMenuTableViewController: UITableViewDataSource {

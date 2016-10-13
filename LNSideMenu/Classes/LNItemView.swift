@@ -8,7 +8,7 @@
 
 import UIKit
 
-internal class LNItemView: UIView {
+internal final class LNItemView: UIView {
   
   fileprivate var titleLabel = UILabel()
   

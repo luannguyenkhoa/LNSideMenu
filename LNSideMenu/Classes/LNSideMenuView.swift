@@ -8,8 +8,9 @@
 
 import UIKit
 import CoreGraphics
+import QuartzCore
 
-internal class LNSideMenuView: UIView, UIScrollViewDelegate {
+internal final class LNSideMenuView: UIView, UIScrollViewDelegate {
   
   // MARK: Constants
   fileprivate let kNumberDefaultItemHeight: CGFloat = 60
@@ -38,6 +39,8 @@ internal class LNSideMenuView: UIView, UIScrollViewDelegate {
   fileprivate var prepared: Bool = false
   
   fileprivate var views: [UIView]! = [UIView]()
+  fileprivate var cacheXpos: [CGFloat] = [CGFloat]()
+  fileprivate var cacheCompletion: Completion?
   var items = [""]
   
   // MARK: Colors
@@ -200,6 +203,8 @@ internal class LNSideMenuView: UIView, UIScrollViewDelegate {
     }
     // Clear all subviews before adding new ones
     views.removeAll()
+    cacheXpos.removeAll()
+    
     for index in 0 ..< totalCells {
       // Calculate item frame by its index
       let dest = abs(index-currentIndex)
@@ -219,6 +224,8 @@ internal class LNSideMenuView: UIView, UIScrollViewDelegate {
       self.menusScrollView.addSubview |> itemView
       // Cache list of items
       views.append(itemView)
+      // Cache list of item's xpos
+      cacheXpos.append(itemFrame.x)
     }
     menusScrollView.contentSize = CGSize(width: menusScrollView.width, height: CGFloat(totalCells*Int(kNumberDefaultItemHeight)))
     self.addSubview |> self.menusScrollView
@@ -317,27 +324,35 @@ internal class LNSideMenuView: UIView, UIScrollViewDelegate {
   }
   
   internal func prepareForAnimation() {
+//    // Performing completion closure if needed
+//    if let cacheCompletion = cacheCompletion { cacheCompletion() }
+//    // Cancel all animations
+//    self.layer.removeAllAnimations()
+//    // Reset items's xpos before animating
+//    views.enumerated().forEach({ $0.element.x = cacheXpos[$0.offset] })
+    // Moving items to destint xpos
     for item in views {
       animateItemByUpdatingXpos(item: item, isIn: false)
     }
     prepared = true
   }
   
-  internal func animateContents() {
+  internal func animateContents(completion: @escaping Completion) {
     // Check if the animation was prepared before then performing animation
     if prepared {
       // Animate
-      prepared = false
+      cacheCompletion = completion
       var startIdx: Int = Int(floor(menusScrollView.contentOffset.y / (views.first?.height ?? 1)))
       if 0..<views.count ~= startIdx {
         startIdx = startIdx == 0 ? 0 : startIdx - 1
-        animation |> (startIdx, views.count, startIdx == 0)
-        if startIdx > 0 { animation |> (0, startIdx, true) }
+        animation |> (startIdx, views.count, startIdx == 0, completion)
+        if startIdx > 0 { animation |> (0, startIdx, true, completion) }
       }
+      prepared = false
     }
   }
   
-  fileprivate func animation(startIdx: Int, endIdx: Int, end: Bool) {
+  fileprivate func animation(startIdx: Int, endIdx: Int, end: Bool, completion: Completion? = nil) {
     let duration = 0.25
     var delay: TimeInterval = 0
     let sum = views.count
@@ -345,7 +360,11 @@ internal class LNSideMenuView: UIView, UIScrollViewDelegate {
       UIView.animate(withDuration: duration, delay: delay, options: .curveEaseInOut, animations: {
         self.animateItemByUpdatingXpos(item: self.views[idx], isIn: true)
         }, completion: { _ in
-          if idx == endIdx-1 && end { self.prepared = true }
+          if idx == endIdx-1 && end {
+            // Callback when the animations all are done
+            if let completion = completion { completion() }
+            self.cacheCompletion = nil
+          }
       })
       UIView.commitAnimations()
       // Increasing delay time by animation time after each animation performed that will playing animations by order

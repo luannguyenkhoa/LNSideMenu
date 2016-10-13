@@ -18,7 +18,7 @@ class SMNavigationController: LNSideMenuNavigationController {
     // Do any additional setup after loading the view.
     // Using default side menu
     items = ["All","Hot Food","Sandwiches","Hot Pots","Hot Rolls", "Salads","Pies","Dessrts","Drinks","Breakfast","Cookies","Lunch"]
-    initialSideMenu(.left)
+    initialSideMenu(.right)
     // Custom side menu
 //    initialCustomMenu(pos: .left)
   }
@@ -32,13 +32,14 @@ class SMNavigationController: LNSideMenuNavigationController {
     sideMenu = LNSideMenu(sourceView: view, menuPosition: position, items: items!)
     sideMenu?.menuViewController?.menuBgColor = UIColor.black.withAlphaComponent(0.85)
     sideMenu?.delegate = self
+    sideMenu?.underNavigationBar = true
     view.bringSubview(toFront: navigationBar)
   }
   
   fileprivate func initialCustomMenu(pos position: Position) {
     let menu = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "LeftMenuTableViewController") as! LeftMenuTableViewController
     menu.delegate = self
-    sideMenu = LNSideMenu(sourceView: view, menuPosition: position, customSideMenu: menu)
+    sideMenu = LNSideMenu(navigation: self, menuPosition: position, customSideMenu: menu)
     sideMenu?.delegate = self
     sideMenu?.enableDynamic = true
     // Moving down the menu view under navigation bar

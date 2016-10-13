@@ -8,7 +8,7 @@
 
 import UIKit
 
-open class LNSideMenu: NSObject, UIGestureRecognizerDelegate {
+public final class LNSideMenu: NSObject, UIGestureRecognizerDelegate {
   
   public typealias Completion = () -> ()
   
@@ -18,6 +18,9 @@ open class LNSideMenu: NSObject, UIGestureRecognizerDelegate {
   fileprivate let kPushMagnitude: CGFloat = 15
   fileprivate let kGravityDirection: CGFloat = 3.5
   fileprivate let shortDuration: TimeInterval = 0.25
+  fileprivate var kNavBarHeight: CGFloat {
+    return [.landscapeRight, .landscapeLeft].contains(UIApplication.shared.statusBarOrientation) ? 52 : 64
+  }
   
   // MARK: Properties
   // This property should be private for this release
@@ -30,12 +33,22 @@ open class LNSideMenu: NSObject, UIGestureRecognizerDelegate {
     }
   }
   
-  open var isNavbarHiddenOrTranslucent = false {
+  /*
+   If the content view's navigation bar is hidden or translucent, you should assign a `true` value to this property. 
+   Otherwise, `false` value is that to moving down the default menu under navigation bar.
+   */
+  open var isNavbarHiddenOrTransparent = false {
     didSet {
       // Refresh side menu whenever this property is set a new value
       refreshSideMenu()
     }
   }
+  /*
+   For the custom menu, using this property to moving up/down to top (true) or under navigation bar(false).
+   This property won't work for the default menu. 
+   Check ``isNavbarHiddenOrTransparent`` out if you're planning to use the default menu.
+   */
+  open var underNavigationBar: Bool = false
   
   open weak var delegate: LNSideMenuDelegate?
   open var allowLeftSwipe = true
@@ -50,12 +63,7 @@ open class LNSideMenu: NSObject, UIGestureRecognizerDelegate {
       cacheEnableDynamic = enableDynamic
     }
   }
-  open var underNavigationBar: Bool = false {
-    didSet {
-      sideMenuContainerView.y = ypos
-      sideMenuContainerView.height = sourceView.height - ypos
-    }
-  }
+
   open var disabled: Bool = false
   open var enableAnimation: Bool = true
   open var customMenu: UIViewController?
@@ -76,9 +84,17 @@ open class LNSideMenu: NSObject, UIGestureRecognizerDelegate {
   fileprivate var cacheEnableDynamic: Bool = true
   fileprivate var dynamicAnimatorEnded: Bool = true
   fileprivate let dispatch_group: DispatchGroup = DispatchGroup()
+  fileprivate var animationCompleted: Bool = true
+  fileprivate var menuSize: LNSize = .twothird
+  
   fileprivate var ypos: CGFloat {
-    return underNavigationBar ? 64 : 0
+    if !isCustomMenu { return 0 }
+    return underNavigationBar ? kNavBarHeight : 0
   }
+  fileprivate lazy var blurView: UIView = {
+    return self.initialBlurView()
+  }()
+  fileprivate var navController: UINavigationController?
   
   fileprivate init(sourceView source: UIView, position: Position) {
     super.init()
@@ -145,18 +161,23 @@ open class LNSideMenu: NSObject, UIGestureRecognizerDelegate {
   }
   
   // Initialize side menu without using default menu, using your own custom sidemenu instead
-  public convenience init(sourceView sview: UIView, menuPosition: Position, customSideMenu: UIViewController, size: LNSize = .twothird) {
-    self.init(sourceView: sview, position: menuPosition)
+  public convenience init(navigation nav: UINavigationController, menuPosition: Position, customSideMenu: UIViewController, size: LNSize = .twothird) {
+    self.init(sourceView: nav.view, position: menuPosition)
     // Keep references
     customMenu = customSideMenu
+    navController = nav
+    menuSize = size
     
     // Config custom menu view
-    customSideMenu.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-    customSideMenu.view.frame = sideMenuContainerView.bounds
-    customSideMenu.view.frame.width = size.width
+    customMenu?.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+    customMenu?.view.frame = sideMenuContainerView.bounds
+    customMenu?.view.frame.width = size.width
+    
+    // Adding blur view under custom side menu
+    blurView.alpha = 0
     
     // Adding subview
-    sideMenuContainerView.addSubview |> customSideMenu.view
+    sideMenuContainerView.addSubview |> customMenu!.view
   }
   
   internal func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
@@ -184,13 +205,14 @@ open class LNSideMenu: NSObject, UIGestureRecognizerDelegate {
         }
       }
       sideMenuContainerView.center.x = sideMenuContainerView.center.x + translation
+      animateBlurview(byOffset: (true, sideMenuContainerView.center.x))
       gesture.setTranslation(_:in:) |> (CGPoint.zero, sourceView)
-      
+
     default:
       let shouldClose = position == .left ? !leftToRight && sideMenuContainerView.frame.maxX < menuWidth : leftToRight && sideMenuContainerView.frame.minX > (sourceView.width - menuWidth)
       // Disable dynamic behavior effect if there is handling the gesture recognizer action
       cacheEnableDynamic = false
-      toggleMenu(!shouldClose)
+      panToogleMenu(!shouldClose)
     }
   }
   
@@ -262,22 +284,46 @@ open class LNSideMenu: NSObject, UIGestureRecognizerDelegate {
     // Configure side menu container frame
     updateFrame()
     
-    // Setup container view
-    sideMenuContainerView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-    sideMenuContainerView.autoresizesSubviews = true
+    // Setup container views
     sideMenuContainerView.backgroundColor = .clear
     sourceView.addSubview |> sideMenuContainerView
   }
   
+  fileprivate func initialBlurView() -> UIView {
+    // Add blur view for custom sidemenu
+    let blurView = UIView(frame: sideMenuContainerView.bounds)
+    blurView.backgroundColor = UIColor.gray.withAlphaComponent(0.5)
+    blurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+    navController?.navigationBar.addSubview(blurView)
+    return blurView
+  }
+  
+  fileprivate func panToogleMenu(_ show: Bool) {
+    var centerx = sourceView.center.x
+    if !show {
+      centerx = position == .left ? -sourceView.width/2 : sourceView.width + sourceView.width/2
+    }
+    UIView.animate(withDuration: animationDuration) { 
+      self.sideMenuContainerView.center.x = centerx
+    }
+  }
+  
   fileprivate func toggleMenu(_ isShow: Bool, completion: Completion? = nil) {
+    // Waiting until all dispatches were released
+    print("starting")
+    if animationCompleted {
+      let animation = isShow && self.isMenuOpen ? false : self.enableAnimation
+      self.animateSideMenu(isShow, animation: animation, completion: completion)
+    }
+  }
+  
+  fileprivate func animateSideMenu(_ isShow: Bool, animation: Bool = true, completion: Completion? = nil) {
     // Do nothing if the menu was disabled
     if disabled || !dynamicAnimatorEnded { return }
     // Do nothing if the expected
     if isShow && delegate?.sideMenuShouldOpenSideMenu?() == false {
       return
     }
-    // Do nothing if the next action status and current status are the same
-    if (isShow && isMenuOpen) || (!isShow && !isMenuOpen) { return }
     // Should update if needed
     updateSideMenuApperanceIfNeeded()
     isMenuOpen = isShow
@@ -290,11 +336,14 @@ open class LNSideMenu: NSObject, UIGestureRecognizerDelegate {
       isShow ? delegate?.sideMenuWillOpen?() : delegate?.sideMenuWillClose?()
       // If bouncing enabled is true, performing dynamic behavior instead of standard animation
       dynamicBehavior(isShow, width: width, height: height)
+      // Starting show/hide blur view animation
+      animateBlurview(isShow: isShow)
       return
     }
+    animationCompleted = false
     // Preparing for animating menu's contents
     var duration = animationDuration
-    if isShow && enableAnimation && !isCustomMenu {
+    if isShow && animation && !isCustomMenu {
       menuViewController?.prepareForAnimation()
       duration = shortDuration
     }
@@ -302,18 +351,41 @@ open class LNSideMenu: NSObject, UIGestureRecognizerDelegate {
     let destFrame = position == .left ? CGRect(x: isShow ? 0: -menuWidth, y: ypos, width: menuWidth, height: height) :
       CGRect(x: isShow ? width-menuWidth : width, y: ypos, width: menuWidth, height: height)
     // Performing a standard animation
+    let closure = {
+      self.isMenuOpen ? self.delegate?.sideMenuDidOpen?() : self.delegate?.sideMenuDidClose?()
+      // Begins animating menu's contents
+      if let completion = completion { completion() }
+      print("completion")
+      self.animationCompleted = true
+    }
     UIView.animate(withDuration: duration, animations: {
       self.sideMenuContainerView.frame = destFrame
       }, completion: { _ in
-        self.isMenuOpen ? self.delegate?.sideMenuDidOpen?() : self.delegate?.sideMenuDidClose?()
-        // Begins animating menu's contents
-        if let completion = completion { completion() }
+        if !(isShow && animation && !self.isCustomMenu) { closure() }
     })
-    if isShow && self.enableAnimation && !isCustomMenu {
+    if isShow && animation && !isCustomMenu {
       // Performing menu's contents fade animation
-      menuViewController?.animateContents()
+      menuViewController?.animateContents() { [weak self] _ in
+        closure()
+      }
     }
+    // Starting show/hide blur view animation
+    animateBlurview(isShow: isShow)
     isShow ? delegate?.sideMenuWillOpen?() : delegate?.sideMenuWillClose?()
+  }
+  
+  fileprivate func animateBlurview(isShow: Bool = false, byOffset offset: (Bool, CGFloat)? = nil) {
+    if !isCustomMenu { return }
+    var alpha: CGFloat = isShow ? 1: 0
+    // Calculating alpha val by offset if required
+    if let offset = offset, offset.0 {
+      alpha = offset.1 / (sideMenuContainerView.width/2)
+      alpha = 0...1 ~= alpha ? alpha : alpha < 0 ? 0 : 1
+    }
+    // Animating show/hide blur view by alpha
+    UIView.animate(withDuration: animationDuration) {
+      self.blurView.alpha = alpha
+    }
   }
   
   fileprivate func dynamicBehavior(_ shouldOpen: Bool, width: CGFloat, height: CGFloat) {
@@ -403,12 +475,16 @@ open class LNSideMenu: NSObject, UIGestureRecognizerDelegate {
     }
   }
   
-  open func updateFrame() {
+  internal func updateFrame() {
     // Get adjusted frame dimensions that is dependent on ios version and device oriented
     let (width, height) = adjustFrameDimensions |> (sourceView.frame.width, sourceView.frame.height)
-    // Re-assign container view frame based on menu location after getting adjusted frame dimensions
+    // Re-assign container view frame based on menu position after getting adjusted frame dimensions
     sideMenuContainerView.frame = CGRect(x: position == .left ? isMenuOpen ? 0: -menuWidth : isMenuOpen ? width - menuWidth : width+1
       , y: ypos, width: width, height: height)
+    // Update blur view y position
+    if isCustomMenu {
+      blurView.y = ypos - 20
+    }
   }
   
   // Implementing set content viewcontroller effection
@@ -421,17 +497,11 @@ open class LNSideMenu: NSObject, UIGestureRecognizerDelegate {
     updateFrame()
     // Handle navigation bar translucent if needed
     if !isCustomMenu {
-      menuViewController?.isNavigationBarChanged = isNavbarHiddenOrTranslucent
+      menuViewController?.isNavigationBarChanged = isNavbarHiddenOrTransparent
     }
   }
   
   fileprivate func adjustFrameDimensions( _ width: CGFloat, height: CGFloat ) -> (CGFloat,CGFloat) {
-    if floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_7_1 &&
-      (UIApplication.shared.statusBarOrientation == UIInterfaceOrientation.landscapeRight ||
-        UIApplication.shared.statusBarOrientation == UIInterfaceOrientation.landscapeLeft) {
-      // Preparing for supporting landscape orientation
-      return (height, width)
-    }
     return (width, height-ypos)
   }
 }

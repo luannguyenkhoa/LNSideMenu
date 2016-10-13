@@ -47,7 +47,7 @@ self.sideMenuManager?.toggleSideMenuView()
 . It has a feature for navigation bar translucent. To use this feature, just add code as below:
 ```swift
 self.navigationBarTranslucentStyle()
-sideMenuManager?.sideMenuController()?.sideMenu?.isNavbarHiddenOrTranslucent = true
+sideMenuManager?.sideMenuController()?.sideMenu?.isNavbarHiddenOrTransparent = true
 ```
 
 . Check example project for more explaination
@@ -96,7 +96,7 @@ LNSideMenu is available through [CocoaPods](http://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
 ```ruby
-pod 'LNSideMenu', '~> 2.0'
+pod 'LNSideMenu', '~> 2.0.0'
 ```
 
 ### Manual

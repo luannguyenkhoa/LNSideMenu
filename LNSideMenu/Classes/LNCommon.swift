@@ -15,6 +15,9 @@ internal let screenWidth = UIScreen.main.bounds.width
 internal let navigationBarHeight: CGFloat = 64
 internal let kDistanceItemToRight: CGFloat = 18
 
+// MARK: Typealias
+internal typealias Completion = () -> ()
+
 // MARK: Enums
 public enum Position {
   case right
