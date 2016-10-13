@@ -365,7 +365,7 @@ public final class LNSideMenu: NSObject, UIGestureRecognizerDelegate {
     })
     if isShow && animation && !isCustomMenu {
       // Performing menu's contents fade animation
-      menuViewController?.animateContents() { [weak self] _ in
+      menuViewController?.animateContents() {
         closure()
       }
     }
