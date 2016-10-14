@@ -18,6 +18,7 @@ public final class LNSideMenu: NSObject, UIGestureRecognizerDelegate {
   fileprivate let kPushMagnitude: CGFloat = 15
   fileprivate let kGravityDirection: CGFloat = 3.5
   fileprivate let shortDuration: TimeInterval = 0.25
+  fileprivate let maxXPan: CGFloat = 30
   fileprivate var kNavBarHeight: CGFloat {
     return [.landscapeRight, .landscapeLeft].contains(UIApplication.shared.statusBarOrientation) ? 52 : 64
   }
@@ -71,7 +72,7 @@ public final class LNSideMenu: NSObject, UIGestureRecognizerDelegate {
     return customMenu != nil
   }
   
-  // private
+  // MARK: Private properties
   fileprivate(set) open var isMenuOpen: Bool = false
   fileprivate(set) open var position: Position = .left
   fileprivate let sideMenuContainerView = UIView()
@@ -85,7 +86,6 @@ public final class LNSideMenu: NSObject, UIGestureRecognizerDelegate {
   fileprivate var dynamicAnimatorEnded: Bool = true
   fileprivate let dispatch_group: DispatchGroup = DispatchGroup()
   fileprivate var animationCompleted: Bool = true
-  fileprivate var menuSize: LNSize = .twothird
   
   fileprivate var ypos: CGFloat {
     if !isCustomMenu { return 0 }
@@ -96,11 +96,13 @@ public final class LNSideMenu: NSObject, UIGestureRecognizerDelegate {
   }()
   fileprivate var navController: UINavigationController?
   
+  
+  // MARK: Initialize
+  
   fileprivate init(sourceView source: UIView, position: Position) {
     super.init()
     sourceView = source
     self.position = position
-    setupMenuView()
     
     /*
      A dynamic animator provides physics-related capabilities and animations for its dynamic items, and provides the context for those animations. 
@@ -128,7 +130,10 @@ public final class LNSideMenu: NSObject, UIGestureRecognizerDelegate {
       self.sourceView.addGestureRecognizer(leftSwipeGesture)
       self.sideMenuContainerView.addGestureRecognizer(rightSwipeGesture)
     }
+    
+    setupMenuView()
   }
+  
   // Initial swipe gesture with specific direction
   fileprivate func initialSwipeGesture(_ direction: UISwipeGestureRecognizerDirection) -> UISwipeGestureRecognizer {
     // Initial swipe gesture recognizer with inputting direction
@@ -150,6 +155,7 @@ public final class LNSideMenu: NSObject, UIGestureRecognizerDelegate {
     let rightSwipeGesture = pos == .left ? initialSwipeGesture(.left) : initialSwipeGesture(.right)
     handler(leftSwipeGesture, rightSwipeGesture)
   }
+  
   // Initialize sidemenu by using default menu
   public convenience init(sourceView source: UIView, menuPosition: Position, items: [String], highlightItemAtIndex: Int = Int.max) {
     self.init(sourceView: source, position: menuPosition)
@@ -166,7 +172,6 @@ public final class LNSideMenu: NSObject, UIGestureRecognizerDelegate {
     // Keep references
     customMenu = customSideMenu
     navController = nav
-    menuSize = size
     
     // Config custom menu view
     customMenu?.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -179,6 +184,39 @@ public final class LNSideMenu: NSObject, UIGestureRecognizerDelegate {
     // Adding subview
     sideMenuContainerView.addSubview |> customMenu!.view
   }
+  
+  fileprivate func initialBlurView() -> UIView {
+    // Add blur view for custom sidemenu
+    let blurView = UIView(frame: sideMenuContainerView.bounds)
+    blurView.backgroundColor = UIColor.gray.withAlphaComponent(0.5)
+    blurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+    navController?.navigationBar.addSubview(blurView)
+    return blurView
+  }
+  
+  // MARK: Setup and configure
+  
+  fileprivate func setupMenuView() {
+    
+    // Configure side menu container frame
+    updateFrame()
+    
+    // Setup container views
+    sideMenuContainerView.backgroundColor = .clear
+    sourceView.addSubview |> sideMenuContainerView
+  }
+  
+  fileprivate func updateSideMenuApperanceIfNeeded() {
+    // Update sidemune appearance if needed, it means if there has a change of any related view frame that might effects
+    // the sidemenu frame, we must update the sidemenu containerview frame and layer.
+    if needUpdateAppearance {
+      sideMenuContainerView.width = menuWidth
+      sideMenuContainerView.layer.shadowPath = UIBezierPath(rect: sideMenuContainerView.bounds).cgPath
+      needUpdateAppearance = false
+    }
+  }
+  
+  // MARK: Gesture handlers
   
   internal func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
     
@@ -209,14 +247,16 @@ public final class LNSideMenu: NSObject, UIGestureRecognizerDelegate {
       gesture.setTranslation(_:in:) |> (CGPoint.zero, sourceView)
 
     default:
-      let shouldClose = position == .left ? !leftToRight && sideMenuContainerView.frame.maxX < menuWidth : leftToRight && sideMenuContainerView.frame.minX > (sourceView.width - menuWidth)
-      // Disable dynamic behavior effect if there is handling the gesture recognizer action
+      let shouldClose = position == .left ? !leftToRight && sideMenuContainerView.frame.maxX < menuWidth-maxXPan : leftToRight && sideMenuContainerView.frame.minX > maxXPan
       cacheEnableDynamic = false
-      panToogleMenu(!shouldClose)
+      // Just performing toggle menu iff the current status is not matched with the next status
+      if shouldClose != !isMenuOpen {
+        panToogleMenu(!shouldClose)
+      }
     }
   }
   
-  open func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+  public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
     // Disable gesture if dynamic animator has not ended animation yet
     if !dynamicAnimatorEnded {
       return false
@@ -263,59 +303,17 @@ public final class LNSideMenu: NSObject, UIGestureRecognizerDelegate {
     return true
   }
   
+  public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    return true
+  }
+  
   internal func handleGesture(_ gesture: UISwipeGestureRecognizer) {
     // Toggle side menu by swipe gesture direction
     cacheEnableDynamic = false
     toggleMenu((position == .right && gesture.direction == .left) || (position == .left && gesture.direction == .right))
   }
   
-  fileprivate func updateSideMenuApperanceIfNeeded() {
-    // Update sidemune appearance if needed, it means if there has a change of any related view frame that might effects
-    // the sidemenu frame, we must update the sidemenu containerview frame and layer.
-    if needUpdateAppearance {
-      sideMenuContainerView.width = menuWidth
-      sideMenuContainerView.layer.shadowPath = UIBezierPath(rect: sideMenuContainerView.bounds).cgPath
-      needUpdateAppearance = false
-    }
-  }
-  
-  fileprivate func setupMenuView() {
-    
-    // Configure side menu container frame
-    updateFrame()
-    
-    // Setup container views
-    sideMenuContainerView.backgroundColor = .clear
-    sourceView.addSubview |> sideMenuContainerView
-  }
-  
-  fileprivate func initialBlurView() -> UIView {
-    // Add blur view for custom sidemenu
-    let blurView = UIView(frame: sideMenuContainerView.bounds)
-    blurView.backgroundColor = UIColor.gray.withAlphaComponent(0.5)
-    blurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-    navController?.navigationBar.addSubview(blurView)
-    return blurView
-  }
-  
-  fileprivate func panToogleMenu(_ show: Bool) {
-    var centerx = sourceView.center.x
-    if !show {
-      centerx = position == .left ? -sourceView.width/2 : sourceView.width + sourceView.width/2
-    }
-    UIView.animate(withDuration: animationDuration) { 
-      self.sideMenuContainerView.center.x = centerx
-    }
-  }
-  
-  fileprivate func toggleMenu(_ isShow: Bool, completion: Completion? = nil) {
-    // Waiting until all dispatches were released
-    print("starting")
-    if animationCompleted {
-      let animation = isShow && self.isMenuOpen ? false : self.enableAnimation
-      self.animateSideMenu(isShow, animation: animation, completion: completion)
-    }
-  }
+  // MARK: Animations
   
   fileprivate func animateSideMenu(_ isShow: Bool, animation: Bool = true, completion: Completion? = nil) {
     // Do nothing if the menu was disabled
@@ -355,7 +353,6 @@ public final class LNSideMenu: NSObject, UIGestureRecognizerDelegate {
       self.isMenuOpen ? self.delegate?.sideMenuDidOpen?() : self.delegate?.sideMenuDidClose?()
       // Begins animating menu's contents
       if let completion = completion { completion() }
-      print("completion")
       self.animationCompleted = true
     }
     UIView.animate(withDuration: duration, animations: {
@@ -445,6 +442,31 @@ public final class LNSideMenu: NSObject, UIGestureRecognizerDelegate {
     animator.addBehavior(menuViewBehavior)
   }
   
+  // MARK: Toggle Menu
+  
+  fileprivate func panToogleMenu(_ show: Bool) {
+    var centerx = sourceView.center.x
+    if !show {
+      centerx = position == .left ? -sourceView.width/2 : sourceView.width + sourceView.width/2
+    }
+    isMenuOpen = show
+    UIView.animate(withDuration: animationDuration, animations: {
+      self.sideMenuContainerView.center.x = centerx
+    }) { _ in
+      self.animationCompleted = true
+    }
+    // Starting show/hide blur view animation
+    animateBlurview(isShow: show)
+  }
+  
+  fileprivate func toggleMenu(_ isShow: Bool, completion: Completion? = nil) {
+    // Waiting until all animations are done
+    if animationCompleted {
+      let animation = isShow && self.isMenuOpen ? false : self.enableAnimation
+      self.animateSideMenu(isShow, animation: animation, completion: completion)
+    }
+  }
+  
   open func toggleMenu(completion: Completion? = nil) {
     // Revert boucingEnabled default value, because it might be changed by gesture handlers
     cacheEnableDynamic = isMenuOpen ? false : enableDynamic
@@ -465,6 +487,8 @@ public final class LNSideMenu: NSObject, UIGestureRecognizerDelegate {
     // Just only show sidemenu if it was really hidden
     if !isMenuOpen { toggleMenu |> (true, completion) }
   }
+  
+  // MARK: Frame and refresh content
   
   open func refreshMenu(_ items: [String]) {
     // Refresh side menu with a new list items
@@ -506,6 +530,8 @@ public final class LNSideMenu: NSObject, UIGestureRecognizerDelegate {
   }
 }
 
+// MARK: LNSMDelegate
+
 extension LNSideMenu: LNSMDelegate {
   func didSelectItemAtIndex(SideMenu: LNSideMenuView, index: Int) {
     // Handle if dynamic animator is in processing
@@ -532,6 +558,8 @@ extension LNSideMenu: LNSMDelegate {
     }
   }
 }
+
+// MARK: Dynamic animator delegate
 
 extension LNSideMenu: UIDynamicAnimatorDelegate {
   public func dynamicAnimatorDidPause(_ animator: UIDynamicAnimator) {
