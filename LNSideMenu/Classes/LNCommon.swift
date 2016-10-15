@@ -182,6 +182,15 @@ internal func |><A, B, C, D, E, F, G, H, I, J> (f: (A, B, C, D, E, F, G, H, I, J
   f(arg.0, arg.1, arg.2, arg.3, arg.4, arg.5, arg.6, arg.7, arg.8, arg.9)
 }
 
+// A functional that handling mathematic method
+internal func inoutMath<A>(_ f: (_ lhs: inout A, _ rhs: A) -> (), _ fParam: inout A, _ sParam: A) {
+  f(&fParam, sParam)
+}
+
+internal func compare<A>(_ f:(_ lhs: A, _ rhs: A) -> Bool, _ fp: inout A, _ sp: A) {
+  fp = f(fp, sp) ? sp : fp
+}
+
 // Getting frame's components
 extension CGRect {
   

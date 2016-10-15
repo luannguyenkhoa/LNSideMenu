@@ -17,10 +17,10 @@ class SMNavigationController: LNSideMenuNavigationController {
     
     // Do any additional setup after loading the view.
     // Using default side menu
-//    items = ["All","Hot Food","Sandwiches","Hot Pots","Hot Rolls", "Salads","Pies","Dessrts","Drinks","Breakfast","Cookies","Lunch"]
-//    initialSideMenu(.right)
+    items = ["All","Hot Food","Sandwiches","Hot Pots","Hot Rolls", "Salads","Pies","Dessrts","Drinks","Breakfast","Cookies","Lunch"]
+    initialSideMenu(.left)
     // Custom side menu
-    initialCustomMenu(pos: .right)
+//    initialCustomMenu(pos: .right)
   }
   
   override func didReceiveMemoryWarning() {

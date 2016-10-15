@@ -16,7 +16,7 @@ internal final class LNSideMenuView: UIView, UIScrollViewDelegate {
   fileprivate let kNumberDefaultItemHeight: CGFloat = 60
   fileprivate let kNumberDefaultSpace: CGFloat = 30
   fileprivate let kNumberDefaultDistance: CGFloat = 40
-  fileprivate let kNumberDurationAnimation: CGFloat = 0.25
+  fileprivate let kNumberDurationAnimation: TimeInterval = 0.25
   fileprivate let kNumberDefaultItemsHoziConstant: Int = 2
   fileprivate let kNumberAriProg: Int = 10
   fileprivate let kNumberVelocityConstant: CGFloat = 60
@@ -37,10 +37,10 @@ internal final class LNSideMenuView: UIView, UIScrollViewDelegate {
   fileprivate var originalXRight: CGFloat = 0
   fileprivate var originalXLeft: CGFloat = 0
   fileprivate var prepared: Bool = false
+  fileprivate var didComplete: Bool = true
+  fileprivate var delay: TimeInterval = 0
   
   fileprivate var views: [UIView]! = [UIView]()
-  fileprivate var cacheXpos: [CGFloat] = [CGFloat]()
-  fileprivate var cacheCompletion: Completion?
   var items = [""]
   
   // MARK: Colors
@@ -203,7 +203,6 @@ internal final class LNSideMenuView: UIView, UIScrollViewDelegate {
     }
     // Clear all subviews before adding new ones
     views.removeAll()
-    cacheXpos.removeAll()
     
     for index in 0 ..< totalCells {
       // Calculate item frame by its index
@@ -224,8 +223,6 @@ internal final class LNSideMenuView: UIView, UIScrollViewDelegate {
       self.menusScrollView.addSubview |> itemView
       // Cache list of items
       views.append(itemView)
-      // Cache list of item's xpos
-      cacheXpos.append(itemFrame.x)
     }
     menusScrollView.contentSize = CGSize(width: menusScrollView.width, height: CGFloat(totalCells*Int(kNumberDefaultItemHeight)))
     self.addSubview |> self.menusScrollView
@@ -318,18 +315,12 @@ internal final class LNSideMenuView: UIView, UIScrollViewDelegate {
     return { view, speed in
       UIView.animate(withDuration: TimeInterval(speed), delay: 0, options: .curveLinear, animations: { () -> Void in
         view.x = xpos
-        }, completion: nil)
+      })
       UIView.commitAnimations()
     }
   }
   
   internal func prepareForAnimation() {
-//    // Performing completion closure if needed
-//    if let cacheCompletion = cacheCompletion { cacheCompletion() }
-//    // Cancel all animations
-//    self.layer.removeAllAnimations()
-//    // Reset items's xpos before animating
-//    views.enumerated().forEach({ $0.element.x = cacheXpos[$0.offset] })
     // Moving items to destint xpos
     for item in views {
       animateItemByUpdatingXpos(item: item, isIn: false)
@@ -338,58 +329,55 @@ internal final class LNSideMenuView: UIView, UIScrollViewDelegate {
   }
   
   internal func animateContents(completion: @escaping Completion) {
+    didComplete = false
     // Check if the animation was prepared before then performing animation
     if prepared {
       // Animate
-      cacheCompletion = completion
       var startIdx: Int = Int(floor(menusScrollView.contentOffset.y / (views.first?.height ?? 1)))
       if 0..<views.count ~= startIdx {
+        delay = 0
         startIdx = startIdx == 0 ? 0 : startIdx - 1
         animation |> (startIdx, views.count, startIdx == 0, completion)
         if startIdx > 0 { animation |> (0, startIdx, true, completion) }
       }
       prepared = false
+    } else {
+       completion()
     }
   }
   
   fileprivate func animation(startIdx: Int, endIdx: Int, end: Bool, completion: Completion? = nil) {
-    let duration = 0.25
-    var delay: TimeInterval = 0
     let sum = views.count
     for idx in startIdx..<endIdx where 0..<sum ~= idx {
-      UIView.animate(withDuration: duration, delay: delay, options: .curveEaseInOut, animations: {
+      UIView.animate(withDuration: kNumberDurationAnimation, delay: delay, options: .curveEaseInOut, animations: {
         self.animateItemByUpdatingXpos(item: self.views[idx], isIn: true)
         }, completion: { _ in
           if idx == endIdx-1 && end {
+            self.didComplete = true
             // Callback when the animations all are done
             if let completion = completion { completion() }
-            self.cacheCompletion = nil
           }
       })
-      UIView.commitAnimations()
       // Increasing delay time by animation time after each animation performed that will playing animations by order
-      delay += duration/3
+      delay += kNumberDurationAnimation/3
     }
   }
   
   fileprivate func animateItemByUpdatingXpos(item: UIView, isIn: Bool) {
     if currentPosition == .left {
-      isIn ? math(+=, &item.x, item.width) : math(-=, &item.x, item.width)
+      isIn ? inoutMath(+=, &item.x, item.width) : inoutMath(-=, &item.x, item.width)
     } else {
       let width = item.width + kDistanceItemToRight
-      isIn ? math(-=, &item.x, width) : math(+=, &item.x, width)
+      isIn ? inoutMath(-=, &item.x, width) : inoutMath(+=, &item.x, width)
     }
   }
-  // A functional that handling mathematic method
-  fileprivate func math<A>(_ f: (_ lhs: inout A, _ rhs: A) -> (), _ fParam: inout A, _ sParam: A) {
-    f(&fParam, sParam)
-  }
-  
+
   // MARK: SideMenuDelegate
   /**
    Did tap on item handler
    */
   func didTapContentView(_ sender: UIGestureRecognizer) {
+    if !didComplete { return }
     let view = sender.view
     let index = view?.tag
     delegate?.didSelectItemAtIndex(SideMenu: self, index: index ?? 0)

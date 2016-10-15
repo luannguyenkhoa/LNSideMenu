@@ -177,6 +177,7 @@ public final class LNSideMenu: NSObject, UIGestureRecognizerDelegate {
     customMenu?.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
     customMenu?.view.frame = sideMenuContainerView.bounds
     customMenu?.view.frame.width = size.width
+    if menuPosition == .right { customMenu?.view.x = sourceView.width - size.width }
     
     // Adding blur view under custom side menu
     blurView.alpha = 0
@@ -247,18 +248,26 @@ public final class LNSideMenu: NSObject, UIGestureRecognizerDelegate {
       gesture.setTranslation(_:in:) |> (CGPoint.zero, sourceView)
 
     default:
+      if gesture.velocity(in: gesture.view).x == 0 {
+        if (position == .left && sideMenuContainerView.x == -menuWidth)
+          || (position == .right && sideMenuContainerView.x == menuWidth) {
+          return
+        }
+      }
       let shouldClose = position == .left ? !leftToRight && sideMenuContainerView.frame.maxX < menuWidth-maxXPan : leftToRight && sideMenuContainerView.frame.minX > maxXPan
       cacheEnableDynamic = false
-      // Just performing toggle menu iff the current status is not matched with the next status
-      if shouldClose != !isMenuOpen {
-        panToogleMenu(!shouldClose)
-      }
+      panToogleMenu(!shouldClose)
     }
   }
   
   public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+    print("completed: \(animationCompleted)")
     // Disable gesture if dynamic animator has not ended animation yet
     if !dynamicAnimatorEnded {
+      return false
+    }
+    // Disable gesture until the toggle menu animation is completed
+    if !animationCompleted {
       return false
     }
     // Such as pan gesture, kill menu scrolling whenever user swipes on view
