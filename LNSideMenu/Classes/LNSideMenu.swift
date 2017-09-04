@@ -65,6 +65,7 @@ public final class LNSideMenu: NSObject, UIGestureRecognizerDelegate {
     }
   }
 
+  open var tapOutsideToDismiss = true
   open var disabled: Bool = false
   open var enableAnimation: Bool = true
   open var customMenu: UIViewController?
@@ -154,6 +155,9 @@ public final class LNSideMenu: NSObject, UIGestureRecognizerDelegate {
     let leftSwipeGesture = pos == .left ? initialSwipeGesture(.right) : initialSwipeGesture(.left)
     let rightSwipeGesture = pos == .left ? initialSwipeGesture(.left) : initialSwipeGesture(.right)
     handler(leftSwipeGesture, rightSwipeGesture)
+    /// Tapping outside of sidemenu
+    let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapGesture(gesture:)))
+    sideMenuContainerView.addGestureRecognizer(tapGesture)
   }
   
   // Initialize sidemenu by using default menu
@@ -321,6 +325,17 @@ public final class LNSideMenu: NSObject, UIGestureRecognizerDelegate {
     cacheEnableDynamic = false
     toggleMenu((position == .right && gesture.direction == .left) || (position == .left && gesture.direction == .right))
   }
+
+  internal func tapGesture(gesture: UIGestureRecognizer) {
+    guard !tapOutsideToDismiss else { return }
+    if let custom = customMenu?.view {
+      if custom.frame.contains(gesture.location(in: sideMenuContainerView)) {
+        toggleMenu()
+      }
+    } else {
+      toggleMenu()
+    }
+  }
   
   // MARK: Animations
   
@@ -459,10 +474,12 @@ public final class LNSideMenu: NSObject, UIGestureRecognizerDelegate {
       centerx = position == .left ? -sourceView.width/2 : sourceView.width + sourceView.width/2
     }
     isMenuOpen = show
+    show ? delegate?.sideMenuWillOpen?() : delegate?.sideMenuWillClose?()
     UIView.animate(withDuration: animationDuration, animations: {
       self.sideMenuContainerView.center.x = centerx
     }) { _ in
       self.animationCompleted = true
+      show ? self.delegate?.sideMenuDidOpen?() : self.delegate?.sideMenuDidClose?()
     }
     // Starting show/hide blur view animation
     animateBlurview(isShow: show)

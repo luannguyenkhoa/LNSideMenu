@@ -5,33 +5,34 @@
 [![License](https://img.shields.io/cocoapods/l/LNSideMenu.svg?style=flat)](http://cocoapods.org/pods/LNSideMenu)
 [![Platform](https://img.shields.io/cocoapods/p/LNSideMenu.svg?style=flat)](http://cocoapods.org/pods/LNSideMenu)
 
-SideMenu library that such as a lot of sidemenu libraries on Github for iOS. The main feature of this library: there has a custom menu view that automatically attached as a default menu, but you can use your own menu instead. That menu view was implemented many effects and animations like scrolling effect, fade animation for displaying the menu's items,..
-Check it out and explore what it can do.
+SideMenu library that such as a lot of sidemenu libraries on Github for iOS. 
+Besides of basic functions of a SideMenu, there is an enhancement sidemenu that was implemented some effects and animations like scrolling effect, fade animation for displaying the menu's items,..
+Checking it out and enjoying.
 
 ![Demo](https://cloud.githubusercontent.com/assets/13121441/19177073/0ca0ce0e-8c70-11e6-9e12-d67e7947d98d.gif)
 ![Demo](https://cloud.githubusercontent.com/assets/13121441/19177074/0cd3415e-8c70-11e6-8082-5057bf406e42.gif)
 
 ## Usage
 
-. Create a UINavigationController subclassing from LNSideMenuNavigationController
+. Create a UINavigationController subclassed from LNSideMenuNavigationController in order.
 
-. Initilize the menu view with a source view:
+. Initilize the menu view based on a source view:
 ```swift
 func initialSideMenu(_ position: Position) {
     sideMenu = LNSideMenu(sourceView: view, menuPosition: position, items: items!)
     sideMenu?.menuViewController?.menuBgColor = UIColor.black.withAlphaComponent(0.85)
     sideMenu?.delegate = self
-    // Bring navigationBar to front if you want
+    // Bring navigationBar to front if needed
     view.bringSubview(toFront: navigationBar)
 }
 ```
 . Implementing delegate methods: didSelectItemAtIndex,..
 
-. In order to change the content viewcontroller: from the your UINavigationController subclassing, getting your destination and then set it as the content viewcontroller.
+. In order to change the content viewcontroller: from the your UINavigationController subclass, getting your destination and then making it as the content viewcontroller.
 
 ```swift
 func didSelectItemAtIndex(index: Int) {
-// TODO: Get your destViewController in here
+// TODO: Get your destViewController here
 self.setContentViewController(destViewController)
 }
 ```
@@ -42,17 +43,18 @@ self.setContentViewController(destViewController)
 self.sideMenuManager?.toggleSideMenuView()
 ```
 
-. It has a feature for navigation bar translucent. In order to using this feature, just add code as below:
+. Making navigation bar translucent by adding these code as following:
 ```swift
 self.navigationBarTranslucentStyle()
 sideMenuManager?.sideMenuController()?.sideMenu?.isNavbarHiddenOrTransparent = true
 ```
 
-. Check example project for more explaination
+. Digging `Example` for more explaination
 
 ## Using your own menu
 
-Initialize side menu using function 
+Initialize sidemenu as below in NavigationController subclass:
+In order for customizing the menu size in width, we can use one of 3 types of size that consists of full, half and twothird.
 ```swift 
 func initialCustomMenu(pos position: Position) {
     let menu = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "LeftMenuTableViewController") as! LeftMenuTableViewController
@@ -65,11 +67,8 @@ func initialCustomMenu(pos position: Position) {
     sideMenu?.underNavigationBar = true
 }
 ``` 
-in NavigationController subclassing.
-
-There is an argument of this method with default value called ``size``, which is LNSize enum used to set the menu size consits of 3 options: full, half, twothird.
-
-## Custom Properties
+ 
+## Customizable Properties
 ```
 . disabled: default is false, disabled/enabled sidemenu
 . enableDynamic: default is true, disabled/enabled dynamic animator
@@ -99,7 +98,7 @@ LNSideMenu is available through [CocoaPods](http://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
 ```ruby
-pod 'LNSideMenu', '~> 2.2'
+pod 'LNSideMenu', '~> 2.3'
 ```
 
 ### Manual
@@ -112,7 +111,7 @@ Adding all files in LNSideMenu folder to your project folder
 
 ## Contribution
 
-I will be happy if anyone's interested in and take the time to contribute it.
+I will be much appreciated if anyone's interested in and take your time to contribute it.
 
 ## Author
 
