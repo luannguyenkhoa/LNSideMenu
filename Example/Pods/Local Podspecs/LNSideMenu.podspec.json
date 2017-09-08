@@ -1,8 +1,8 @@
 {
   "name": "LNSideMenu",
-  "version": "0.1.0",
+  "version": "2.3",
   "summary": "A side menu control for iOS in Swift with custom layer and scrolling effect. Right and Left sides. iOS 8+.",
-  "description": "Based on the side menu libraries that have already published on github, this side menu just customs a bit about its layer and scrolling effect.",
+  "description": "Based on the side menu libraries that have already published on github, this side menu have a little bit custom the layer and scrolling effect.",
   "homepage": "https://github.com/luannguyenkhoa/LNSideMenu",
   "license": {
     "type": "MIT",
@@ -13,7 +13,7 @@
   },
   "source": {
     "git": "https://github.com/luannguyenkhoa/LNSideMenu.git",
-    "tag": "0.1.0"
+    "tag": "2.3"
   },
   "platforms": {
     "ios": "8.0"

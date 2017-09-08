@@ -157,6 +157,8 @@ public final class LNSideMenu: NSObject, UIGestureRecognizerDelegate {
     handler(leftSwipeGesture, rightSwipeGesture)
     /// Tapping outside of sidemenu
     let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapGesture(gesture:)))
+    tapGesture.numberOfTapsRequired = 1
+    tapGesture.numberOfTouchesRequired = 1
     sideMenuContainerView.addGestureRecognizer(tapGesture)
   }
   
@@ -327,9 +329,9 @@ public final class LNSideMenu: NSObject, UIGestureRecognizerDelegate {
   }
 
   internal func tapGesture(gesture: UIGestureRecognizer) {
-    guard !tapOutsideToDismiss else { return }
+    guard tapOutsideToDismiss else { return }
     if let custom = customMenu?.view {
-      if custom.frame.contains(gesture.location(in: sideMenuContainerView)) {
+      if !custom.frame.contains(gesture.location(in: sideMenuContainerView)) {
         toggleMenu()
       }
     } else {
