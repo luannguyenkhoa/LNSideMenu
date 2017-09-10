@@ -8,7 +8,7 @@
 
 import UIKit
 
-public final class LNSideMenu: NSObject, UIGestureRecognizerDelegate {
+public final class LNSideMenu: NSObject {
   
   public typealias Completion = () -> ()
   
@@ -159,6 +159,7 @@ public final class LNSideMenu: NSObject, UIGestureRecognizerDelegate {
     let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapGesture(gesture:)))
     tapGesture.numberOfTapsRequired = 1
     tapGesture.numberOfTouchesRequired = 1
+    tapGesture.delegate = self
     sideMenuContainerView.addGestureRecognizer(tapGesture)
   }
   
@@ -264,62 +265,6 @@ public final class LNSideMenu: NSObject, UIGestureRecognizerDelegate {
       cacheEnableDynamic = false
       panToogleMenu(!shouldClose)
     }
-  }
-  
-  public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-    print("completed: \(animationCompleted)")
-    // Disable gesture if dynamic animator has not ended animation yet
-    if !dynamicAnimatorEnded {
-      return false
-    }
-    // Disable gesture until the toggle menu animation is completed
-    if !animationCompleted {
-      return false
-    }
-    // Such as pan gesture, kill menu scrolling whenever user swipes on view
-    if !isCustomMenu {
-      menuViewController?.sideMenuView.killScrolling()
-    }
-    if let shouldOpen = delegate?.sideMenuShouldOpenSideMenu?() , !shouldOpen {
-      return false
-    }
-    
-    if let gestureRecognizer = gestureRecognizer as? UISwipeGestureRecognizer {
-      if !allowLeftSwipe && gestureRecognizer.direction == .left {
-        return false
-      }
-      
-      if !allowRightSwipe && gestureRecognizer.direction == .right {
-        return false
-      }
-    } else if gestureRecognizer == panGesture {
-      if !allowPanGesture {
-        return false
-      }
-      
-      let touchPosition = gestureRecognizer.location(ofTouch: 0, in: sourceView)
-      if position == .left {
-        if isMenuOpen && touchPosition.x < menuWidth {
-          return true
-        }
-        if touchPosition.x < kGestureXPoint {
-          return true
-        }
-      } else {
-        if isMenuOpen && touchPosition.x > sourceView.frame.width - menuWidth {
-          return true
-        }
-        if touchPosition.x > sourceView.frame.width - kGestureXPoint {
-          return true
-        }
-      }
-      return false
-    }
-    return true
-  }
-  
-  public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-    return true
   }
   
   internal func handleGesture(_ gesture: UISwipeGestureRecognizer) {
@@ -603,5 +548,73 @@ extension LNSideMenu: UIDynamicAnimatorDelegate {
   public func dynamicAnimatorWillResume(_ animator: UIDynamicAnimator) {
     // Enter dynamicAnimator task to main group
     dispatch_group.enter()
+  }
+}
+
+extension LNSideMenu: UIGestureRecognizerDelegate {
+
+  public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+    print("completed: \(animationCompleted)")
+    // Disable gesture if dynamic animator has not ended animation yet
+    if !dynamicAnimatorEnded {
+      return false
+    }
+    // Disable gesture until the toggle menu animation is completed
+    if !animationCompleted {
+      return false
+    }
+    // Such as pan gesture, kill menu scrolling whenever user swipes on view
+    if !isCustomMenu {
+      menuViewController?.sideMenuView.killScrolling()
+    }
+    if let shouldOpen = delegate?.sideMenuShouldOpenSideMenu?() , !shouldOpen {
+      return false
+    }
+
+    if let gestureRecognizer = gestureRecognizer as? UISwipeGestureRecognizer {
+      if !allowLeftSwipe && gestureRecognizer.direction == .left {
+        return false
+      }
+
+      if !allowRightSwipe && gestureRecognizer.direction == .right {
+        return false
+      }
+    } else if gestureRecognizer == panGesture {
+      if !allowPanGesture {
+        return false
+      }
+
+      let touchPosition = gestureRecognizer.location(ofTouch: 0, in: sourceView)
+      if position == .left {
+        if isMenuOpen && touchPosition.x < menuWidth {
+          return true
+        }
+        if touchPosition.x < kGestureXPoint {
+          return true
+        }
+      } else {
+        if isMenuOpen && touchPosition.x > sourceView.frame.width - menuWidth {
+          return true
+        }
+        if touchPosition.x > sourceView.frame.width - kGestureXPoint {
+          return true
+        }
+      }
+      return false
+    }
+    return true
+  }
+
+  public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    return true
+  }
+
+  public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+    if gestureRecognizer is UITapGestureRecognizer, tapOutsideToDismiss {
+      if let menu = customMenu?.view, let touchView = touch.view, touchView.isDescendant(of: menu) {
+        return false
+      }
+    }
+    return true
   }
 }
