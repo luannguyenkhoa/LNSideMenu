@@ -34,6 +34,7 @@ public enum LNSize {
   case full
   case half
   case twothird
+  case custom(CGFloat)
   
   public var width: CGFloat {
     switch self {
@@ -43,6 +44,8 @@ public enum LNSize {
       return UIScreen.main.bounds.width * 2 / 3
     case .half:
       return UIScreen.main.bounds.width / 2
+    case .custom(let width):
+      return width
     }
   }
 }
