@@ -43,7 +43,7 @@ class NextViewController: UIViewController {
     navigationItem.hidesBackButton = true
   }
   
-  func toggleSideMenu() {
+  @objc func toggleSideMenu() {
     sideMenuManager?.toggleSideMenuView()
   }
   

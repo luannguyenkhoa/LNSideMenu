@@ -252,7 +252,7 @@ public final class LNSideMenu: NSObject {
       }
       sideMenuContainerView.center.x = sideMenuContainerView.center.x + translation
       animateBlurview(byOffset: (true, sideMenuContainerView.center.x))
-      gesture.setTranslation(_:in:) |> (CGPoint.zero, sourceView)
+      gesture.setTranslation(.zero, in: sourceView)
 
     default:
       if gesture.velocity(in: gesture.view).x == 0 {
@@ -443,7 +443,7 @@ public final class LNSideMenu: NSObject {
   open func toggleMenu(completion: Completion? = nil) {
     // Revert boucingEnabled default value, because it might be changed by gesture handlers
     cacheEnableDynamic = isMenuOpen ? false : enableDynamic
-    toggleMenu |> (!isMenuOpen, completion)
+    toggleMenu(!isMenuOpen, completion: completion)
     if !isMenuOpen { updateSideMenuApperanceIfNeeded() }
   }
   
@@ -451,14 +451,14 @@ public final class LNSideMenu: NSObject {
     // disable dynamic animator when hiding sidemenu
     cacheEnableDynamic = false
     // Just only hide sidemenu if it was really shown
-    if isMenuOpen { toggleMenu |> (false, completion) }
+    if isMenuOpen { toggleMenu(false, completion: completion) }
   }
   
   open func showSideMenu(completion: Completion? = nil) {
     // Revert boucingEnabled default value, because it might be changed by gesture handlers
     cacheEnableDynamic = enableDynamic
     // Just only show sidemenu if it was really hidden
-    if !isMenuOpen { toggleMenu |> (true, completion) }
+    if !isMenuOpen { toggleMenu(true, completion: completion) }
   }
   
   // MARK: Frame and refresh content

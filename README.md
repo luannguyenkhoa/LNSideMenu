@@ -88,7 +88,8 @@ func initialCustomMenu(pos position: Position) {
 
 . iOS 8 or higher
 
-. Swift 3
+. Swift 3/4
+
 
 ## Installation
 
@@ -97,8 +98,14 @@ func initialCustomMenu(pos position: Position) {
 LNSideMenu is available through [CocoaPods](http://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
+Swift 3
 ```ruby
 pod 'LNSideMenu', '~> 2.3'
+```
+
+Swift 4
+```ruby
+pod 'LNSideMenu', '~> 3.0'
 ```
 
 ### Manual

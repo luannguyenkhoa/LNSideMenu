@@ -27,7 +27,7 @@ open class LNSideMenuNavigationController: UINavigationController, LNSideMenuPro
       break
     case .default:
       contentViewController.navigationItem.hidesBackButton = true
-      setViewControllers |> ([contentViewController], true)
+      setViewControllers([contentViewController], animated: true)
       break
     }
   }

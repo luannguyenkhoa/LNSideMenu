@@ -134,7 +134,7 @@ internal final class LNSideMenuView: UIView, UIScrollViewDelegate {
   // Forcing stop scrolling scrollview
   func killScrolling() {
     let offset = menusScrollView.contentOffset
-    menusScrollView.setContentOffset |> (offset, false)
+    menusScrollView.setContentOffset(offset, animated: false)
   }
   
   /**
@@ -214,7 +214,7 @@ internal final class LNSideMenuView: UIView, UIScrollViewDelegate {
       
       // Initial item by index
       let itemView = LNItemView()
-      itemView.setupView |> (itemFrame, items[index], index==indexOfDefaultCellHighlight, right, titleColor, highlightColor, itemBgColor)
+      itemView.setupView(itemFrame, title: items[index], isHighlight: index == indexOfDefaultCellHighlight, isRight: right, textColor: titleColor, highlightTextColor: highlightColor, backgroundColor: itemBgColor)
       itemView.tag = index
       // add single tap gesture for each item of menu
       let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapContentView(_:)))
@@ -247,9 +247,9 @@ internal final class LNSideMenuView: UIView, UIScrollViewDelegate {
     var currentViewIndex = 0
     for view in views where view is LNItemView {
       if currentViewIndex == index {
-        self.updateItemViewWidth |> (view as! LNItemView, speed)
+        self.updateItemViewWidth(view as! LNItemView, speed: speed)
       } else {
-        self.updateItemViewFor |> (view as! LNItemView, currentViewIndex, index, speed)
+        self.updateItemViewFor(view as! LNItemView, index: currentViewIndex, current: index, speed: speed)
       }
       currentViewIndex += 1
     }
@@ -338,8 +338,8 @@ internal final class LNSideMenuView: UIView, UIScrollViewDelegate {
       if 0..<views.count ~= startIdx {
         delay = 0
         startIdx = startIdx == 0 ? 0 : startIdx - 1
-        animation |> (startIdx, views.count, startIdx == 0, completion)
-        if startIdx > 0 { animation |> (0, startIdx, true, completion) }
+        animation(startIdx: startIdx, endIdx: views.count, end: startIdx == 0, completion: completion)
+        if startIdx > 0 { animation(startIdx: 0, endIdx: startIdx, end: true, completion: completion) }
       }
       prepared = false
     } else {

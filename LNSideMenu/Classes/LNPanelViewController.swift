@@ -63,7 +63,7 @@ public final class LNPanelViewController: UIViewController {
     sideMenuView.highlightColor = highlightColor
     
     // Setup menu
-    sideMenuView.setupMenu |> (view, position)
+    sideMenuView.setupMenu(view, position: position)
     sideMenuView.delegate = self
   }
   
@@ -81,7 +81,7 @@ public final class LNPanelViewController: UIViewController {
   internal func updateFrame() {
     // Just refresh side menu iff the view frame has already changed
     if setViewFrame() {
-      sideMenuView.refreshMenuWithFrame |> (self.view.frame, isNavigationBarChanged)
+      sideMenuView.refreshMenuWithFrame(view.frame, isChanged: isNavigationBarChanged)
     }
   }
   
