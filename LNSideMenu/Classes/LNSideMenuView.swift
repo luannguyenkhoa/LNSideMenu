@@ -303,7 +303,7 @@ internal final class LNSideMenuView: UIView, UIScrollViewDelegate {
    Update other items frame
    */
   fileprivate func updateItemViewFor(_ itemView: LNItemView, index: Int, current: Int, speed: CGFloat) {
-    animateUpdateView { [unowned self] _ in
+    animateUpdateView { [unowned self] in
       let dest = abs(index-current)
       let sum = (0..<dest).reduce(0, {$0 + $1*self.kNumberAriProg})
       let originX = self.currentPosition == .right ? CGFloat(sum + 2*dest) : -CGFloat(sum + self.kNumberDefaultItemsHoziConstant*dest)
@@ -377,7 +377,7 @@ internal final class LNSideMenuView: UIView, UIScrollViewDelegate {
   /**
    Did tap on item handler
    */
-  func didTapContentView(_ sender: UIGestureRecognizer) {
+  @objc func didTapContentView(_ sender: UIGestureRecognizer) {
     if !didComplete { return }
     let view = sender.view
     let index = view?.tag

@@ -88,7 +88,7 @@ extension SMNavigationController: LNSideMenuDelegate {
 
 extension SMNavigationController: LeftMenuDelegate {
   func didSelectItemAtIndex(index idx: Int) {
-    sideMenu?.toggleMenu() { [unowned self] _ in
+    sideMenu?.toggleMenu() { [unowned self] in
       self.setContentVC(idx)
     }
   }

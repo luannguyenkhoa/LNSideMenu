@@ -226,7 +226,7 @@ public final class LNSideMenu: NSObject {
   
   // MARK: Gesture handlers
   
-  internal func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
+  @objc internal func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
     
     let leftToRight = gesture.velocity(in: gesture.view).x > 0
     switch gesture.state {
@@ -267,13 +267,13 @@ public final class LNSideMenu: NSObject {
     }
   }
   
-  internal func handleGesture(_ gesture: UISwipeGestureRecognizer) {
+  @objc internal func handleGesture(_ gesture: UISwipeGestureRecognizer) {
     // Toggle side menu by swipe gesture direction
     cacheEnableDynamic = false
     toggleMenu((position == .right && gesture.direction == .left) || (position == .left && gesture.direction == .right))
   }
 
-  internal func tapGesture(gesture: UIGestureRecognizer) {
+  @objc internal func tapGesture(gesture: UIGestureRecognizer) {
     guard tapOutsideToDismiss else { return }
     if let custom = customMenu?.view {
       if !custom.frame.contains(gesture.location(in: sideMenuContainerView)) {
