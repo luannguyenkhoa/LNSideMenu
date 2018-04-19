@@ -296,7 +296,7 @@ internal final class LNSideMenuView: UIView, UIScrollViewDelegate {
    Update item frame if it's current item
    */
   fileprivate func updateItemViewWidth(_ currentView: LNItemView, speed: CGFloat) {
-    animateUpdateView { return 0 } |> (currentView, speed)
+    animateUpdateView { return 0 }(currentView, speed)
   }
   
   /**
@@ -308,7 +308,7 @@ internal final class LNSideMenuView: UIView, UIScrollViewDelegate {
       let sum = (0..<dest).reduce(0, {$0 + $1*self.kNumberAriProg})
       let originX = self.currentPosition == .right ? CGFloat(sum + 2*dest) : -CGFloat(sum + self.kNumberDefaultItemsHoziConstant*dest)
       return originX
-    } |> (itemView, speed)
+    }(itemView, speed)
   }
   
   fileprivate func animateUpdateView<A: UIView>(_ calculateX: () -> CGFloat) -> (A, CGFloat) -> () {
