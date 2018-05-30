@@ -54,7 +54,7 @@ sideMenuManager?.sideMenuController()?.sideMenu?.isNavbarHiddenOrTransparent = t
 ## Using your own menu
 
 Initialize sidemenu as below in NavigationController subclass:
-In order for customizing the menu size in width, we can use one of 3 types of size that consists of full, half and twothird.
+In order for customizing the menu size in width, we can use one of 4 types of size that consists of full, half, twothird and custom(CGFloat).
 ```swift 
 func initialCustomMenu(pos position: Position) {
     let menu = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "LeftMenuTableViewController") as! LeftMenuTableViewController

@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'LNSideMenu'
-  s.version          = '3.1'
+  s.version          = '3.2'
   s.summary          = 'A side menu control for iOS in Swift with custom layer and scrolling effect. Right and Left sides. iOS 8+.'
 
 # This description is used to generate tags and improve search results.

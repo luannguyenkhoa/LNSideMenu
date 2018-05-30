@@ -13,12 +13,17 @@ import QuartzCore
 internal final class LNSideMenuView: UIView, UIScrollViewDelegate {
   
   // MARK: Constants
+  fileprivate let isPlus = UIScreen.main.bounds.width == 736
   fileprivate let kNumberDefaultItemHeight: CGFloat = 60
   fileprivate let kNumberDefaultSpace: CGFloat = 30
-  fileprivate let kNumberDefaultDistance: CGFloat = 40
+  fileprivate var kNumberDefaultDistance: CGFloat {
+    return isPlus ? 40 : 30
+  }
   fileprivate let kNumberDurationAnimation: TimeInterval = 0.25
   fileprivate let kNumberDefaultItemsHoziConstant: Int = 2
-  fileprivate let kNumberAriProg: Int = 10
+  fileprivate var kNumberAriProg: Int {
+    return isPlus ? 10 : 8
+  }
   fileprivate let kNumberVelocityConstant: CGFloat = 60
   
   // MARK: Variables
@@ -120,8 +125,8 @@ internal final class LNSideMenuView: UIView, UIScrollViewDelegate {
     // Re-draw shape in self
     draw(self.frame)
     // Update x position of scrollview
-    let distanceToTop = isChanged ? navigationBarHeight : kNumberDefaultSpace
-    self.menusScrollView.y = distanceToTop
+    let distanceToTop = isChanged ? kNavBarHeight : kNumberDefaultSpace
+    self.menusScrollView.y = self.menusScrollView.y - 30 + distanceToTop
   }
   
   func refresh() {
@@ -166,12 +171,13 @@ internal final class LNSideMenuView: UIView, UIScrollViewDelegate {
     // The number of items on screen is always an odd, because it helps to calculate frames of items more easier and cooler
     if totalCellOnScreen % 2 == 0 && totalCells > totalCellOnScreen {
       totalCellOnScreen -= 1
+      frame.height -= kNumberDefaultItemHeight
     }
     // CurrentIndex is presented for index of item at center of screen
     currentIndex = Int(totalCellOnScreen/2)
     index = currentIndex
     // Calculate frame of scrollview
-    frame.y = kNumberDefaultSpace
+    frame.y = kNumberDefaultSpace + (space - frame.height) / 2
     frame.x = isRight ? kNumberDefaultDistance : 0
     menusScrollView.frame = frame
   }
@@ -209,7 +215,6 @@ internal final class LNSideMenuView: UIView, UIScrollViewDelegate {
       let dest = abs(index-currentIndex)
       let sum = (0..<dest).reduce(0, { $0 + $1*kNumberAriProg })
       let originX = (right ? 1 : -1) * CGFloat(sum + kNumberDefaultItemsHoziConstant*dest)
-      print(dest, sum, originX)
       let itemFrame = CGRect(x: originX, y: CGFloat(index*Int(kNumberDefaultItemHeight)), width: menusScrollView.width, height: kNumberDefaultItemHeight)
       
       // Initial item by index

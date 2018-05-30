@@ -12,7 +12,9 @@ import ObjectiveC
 // MARK: Global variables
 internal let screenHeight = UIScreen.main.bounds.height
 internal let screenWidth = UIScreen.main.bounds.width
-internal let navigationBarHeight: CGFloat = 64
+internal var kNavBarHeight: CGFloat {
+    return UIApplication.shared.statusBarFrame.height + ([.landscapeRight, .landscapeLeft].contains(UIApplication.shared.statusBarOrientation) ? 32 : 44)
+}
 internal let kDistanceItemToRight: CGFloat = 18
 
 // MARK: Typealias

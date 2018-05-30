@@ -19,10 +19,7 @@ public final class LNSideMenu: NSObject {
   fileprivate let kGravityDirection: CGFloat = 3.5
   fileprivate let shortDuration: TimeInterval = 0.25
   fileprivate let maxXPan: CGFloat = 30
-  fileprivate var kNavBarHeight: CGFloat {
-    return [.landscapeRight, .landscapeLeft].contains(UIApplication.shared.statusBarOrientation) ? 52 : 64
-  }
-  
+
   // MARK: Properties
   // This property should be private for this release
   fileprivate var menuWidth: CGFloat = UIScreen.main.bounds.width {
