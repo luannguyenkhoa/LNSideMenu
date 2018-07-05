@@ -14,6 +14,7 @@ class NextViewController: UIViewController {
     super.viewDidLoad()
     
     // Do any additional setup after loading the view.
+    sideMenuManager?.instance()?.menu?.disabled = true
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -39,7 +40,7 @@ class NextViewController: UIViewController {
     // Revert navigation bar translucent style to default
     navigationBarNonTranslecentStyle()
     // Update side menu after reverted navigation bar style
-    sideMenuManager?.sideMenuController()?.sideMenu?.isNavbarHiddenOrTransparent = false
+    sideMenuManager?.instance()?.menu?.isNavbarHiddenOrTransparent = false
     navigationItem.hidesBackButton = true
   }
   

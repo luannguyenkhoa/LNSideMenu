@@ -30,9 +30,9 @@ class ViewController: UIViewController {
     // Set navigation bar translucent style
     self.navigationBarTranslucentStyle()
     // Update side menu
-    sideMenuManager?.sideMenuController()?.sideMenu?.isNavbarHiddenOrTransparent = true
+    sideMenuManager?.instance()?.menu?.isNavbarHiddenOrTransparent = true
     // Re-enable sidemenu
-    sideMenuManager?.sideMenuController()?.sideMenu?.disabled = false
+    sideMenuManager?.instance()?.menu?.disabled = false
   }
   
   @IBAction func toogleSideMenu(_ sender: AnyObject) {

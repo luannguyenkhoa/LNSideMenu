@@ -20,7 +20,7 @@ class SMNavigationController: LNSideMenuNavigationController {
     items = ["All","Hot Food","Sandwiches","Hot Pots","Hot Rolls", "Salads","Pies","Dessrts","Drinks","Breakfast","Cookies","Lunch fers"]
     initialSideMenu(.left)
     // Custom side menu
-//    initialCustomMenu(pos: .right)
+//    initialCustomMenu(pos: .left)
   }
   
   override func didReceiveMemoryWarning() {
@@ -29,21 +29,21 @@ class SMNavigationController: LNSideMenuNavigationController {
   }
   
   fileprivate func initialSideMenu(_ position: Position) {
-    sideMenu = LNSideMenu(sourceView: view, menuPosition: position, items: items!)
-    sideMenu?.menuViewController?.menuBgColor = UIColor.black.withAlphaComponent(0.85)
-    sideMenu?.delegate = self
-    sideMenu?.underNavigationBar = true
+    menu = LNSideMenu(sourceView: view, menuPosition: position, items: items!)
+    menu?.menuViewController?.menuBgColor = UIColor.black.withAlphaComponent(0.85)
+    menu?.delegate = self
+    menu?.underNavigationBar = true
     view.bringSubview(toFront: navigationBar)
   }
   
   fileprivate func initialCustomMenu(pos position: Position) {
-    let menu = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "LeftMenuTableViewController") as! LeftMenuTableViewController
-    menu.delegate = self
-    sideMenu = LNSideMenu(navigation: self, menuPosition: position, customSideMenu: menu)
-    sideMenu?.delegate = self
-    sideMenu?.enableDynamic = true
+    let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "LeftMenuTableViewController") as! LeftMenuTableViewController
+    vc.delegate = self
+    menu = LNSideMenu(navigation: self, menuPosition: position, customSideMenu: vc)
+    menu?.delegate = self
+    menu?.enableDynamic = true
     // Moving down the menu view under navigation bar
-    sideMenu?.underNavigationBar = true
+    menu?.underNavigationBar = true
   }
   
   fileprivate func setContentVC(_ index: Int) {
@@ -58,8 +58,8 @@ class SMNavigationController: LNSideMenuNavigationController {
       self.setContentViewController(viewController)
     }
     // Test moving up/down the menu view
-    if let sm = sideMenu, sm.isCustomMenu {
-      sideMenu?.underNavigationBar = false
+    if let sm = menu, sm.isCustomMenu {
+      menu?.underNavigationBar = false
     }
   }
 }
@@ -88,7 +88,7 @@ extension SMNavigationController: LNSideMenuDelegate {
 
 extension SMNavigationController: LeftMenuDelegate {
   func didSelectItemAtIndex(index idx: Int) {
-    sideMenu?.toggleMenu() { [unowned self] in
+    menu?.toggleMenu() { [unowned self] in
       self.setContentVC(idx)
     }
   }

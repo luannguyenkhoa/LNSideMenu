@@ -215,6 +215,7 @@ internal final class LNSideMenuView: UIView, UIScrollViewDelegate {
       let dest = abs(index-currentIndex)
       let sum = (0..<dest).reduce(0, { $0 + $1*kNumberAriProg })
       let originX = (right ? 1 : -1) * CGFloat(sum + kNumberDefaultItemsHoziConstant*dest)
+      print(originX)
       let itemFrame = CGRect(x: originX, y: CGFloat(index*Int(kNumberDefaultItemHeight)), width: menusScrollView.width, height: kNumberDefaultItemHeight)
       
       // Initial item by index

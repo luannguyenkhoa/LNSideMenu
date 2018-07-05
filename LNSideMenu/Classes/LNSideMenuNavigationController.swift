@@ -10,8 +10,8 @@ import UIKit
 
 open class LNSideMenuNavigationController: UINavigationController, LNSideMenuProtocol {
 
-  open var sideMenu: LNSideMenu?
-  open var sideMenuAnimationType: LNSideMenuAnimation = .default
+  open var menu: LNSideMenu?
+  open var animationType: LNSideMenuAnimation = .default
   
   open override func viewDidLoad() {
     super.viewDidLoad()
@@ -19,9 +19,9 @@ open class LNSideMenuNavigationController: UINavigationController, LNSideMenuPro
   
   open func setContentViewController(_ contentViewController: UIViewController) {
     // Hide side menu at the first
-    sideMenu?.hideSideMenu()
+    menu?.hideSideMenu()
     // Add contentViewController within default animation or none
-    switch sideMenuAnimationType {
+    switch animationType {
     case .none:
       self.viewControllers = [contentViewController]
       break

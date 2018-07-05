@@ -76,8 +76,8 @@ public enum LNColor {
 // MARK: Protocols
 
 public protocol LNSideMenuProtocol {
-  var sideMenu: LNSideMenu?{get}
-  var sideMenuAnimationType: LNSideMenuAnimation {get set}
+  var menu: LNSideMenu?{get}
+  var animationType: LNSideMenuAnimation {get set}
   func setContentViewController(_ contentViewController: UIViewController)
 }
 
@@ -96,7 +96,7 @@ internal protocol LNSMDelegate: class {
 
 public protocol LNSideMenuManager {
   
-  mutating func sideMenuController()-> LNSideMenuProtocol?
+  mutating func instance()-> LNSideMenuProtocol?
   mutating func toggleSideMenuView()
   mutating func hideSideMenuView()
   mutating func showSideMenuView()

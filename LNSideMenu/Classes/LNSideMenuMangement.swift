@@ -21,7 +21,7 @@ public struct LNSideMenuManagement: LNSideMenuManager {
     return self.getSideMenuController()
   }()
   
-  mutating public func sideMenuController() -> LNSideMenuProtocol? {
+  mutating public func instance() -> LNSideMenuProtocol? {
     return self.lazySideMenuController
   }
   
@@ -29,19 +29,19 @@ public struct LNSideMenuManagement: LNSideMenuManager {
    Changes current state of side menu view
    */
   public mutating func toggleSideMenuView() {
-    lazySideMenuController?.sideMenu?.toggleMenu()
+    lazySideMenuController?.menu?.toggleMenu()
   }
   /**
    Hides the side menu view
    */
   public mutating func hideSideMenuView() {
-    lazySideMenuController?.sideMenu?.hideSideMenu()
+    lazySideMenuController?.menu?.hideSideMenu()
   }
   /**
    Shows the side menu view
    */
   public mutating func showSideMenuView() {
-    lazySideMenuController?.sideMenu?.showSideMenu()
+    lazySideMenuController?.menu?.showSideMenu()
   }
   /**
    Returns a Bool value indicating whether the side menu is showed
@@ -49,7 +49,7 @@ public struct LNSideMenuManagement: LNSideMenuManager {
    - returns: Bool value
    */
   public mutating func isSideMenuOpen() -> Bool {
-    guard let sideMenu = lazySideMenuController?.sideMenu else {
+    guard let sideMenu = lazySideMenuController?.menu else {
        return false
     }
     return sideMenu.isMenuOpen
@@ -59,7 +59,7 @@ public struct LNSideMenuManagement: LNSideMenuManager {
    */
   public func fixSideMenuSize() {
     if let navController = viewController?.navigationController as? LNSideMenuNavigationController {
-      navController.sideMenu?.updateFrame()
+      navController.menu?.updateFrame()
     }
   }
   /**

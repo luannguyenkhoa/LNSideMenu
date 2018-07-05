@@ -63,7 +63,11 @@ public final class LNSideMenu: NSObject {
   }
 
   open var tapOutsideToDismiss = true
-  open var disabled: Bool = false
+  open var disabled: Bool = false {
+    didSet {
+      print("Reset Flag")
+    }
+  }
   open var enableAnimation: Bool = true
   open var customMenu: UIViewController?
   open var isCustomMenu: Bool {
@@ -224,7 +228,7 @@ public final class LNSideMenu: NSObject {
   // MARK: Gesture handlers
   
   @objc internal func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
-    
+    guard !disabled else { return }
     let leftToRight = gesture.velocity(in: gesture.view).x > 0
     switch gesture.state {
     case .began:
@@ -277,6 +281,14 @@ public final class LNSideMenu: NSObject {
         toggleMenu()
       }
     } else {
+      if let touch = sideMenuContainerView.subviews.first?.subviews.first as? LNSideMenuView {
+        if let scrollView = touch.subviews.filter({ $0 is UIScrollView }).first {
+          let bounds = scrollView.convert(scrollView.bounds, to: sideMenuContainerView)
+          if bounds.contains(gesture.location(in: sideMenuContainerView)) {
+            return
+          }
+        }
+      }
       toggleMenu()
     }
   }

@@ -12,8 +12,14 @@ class ContentViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+  }
+  
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    /// Should set the below flag here to avoid its value gets changed while doing interactivePopGestureRecognizer
     // Disable sidemene
-    sideMenuManager?.sideMenuController()?.sideMenu?.disabled = true
+    sideMenuManager?.instance()?.menu?.disabled = true
   }
   
 }
