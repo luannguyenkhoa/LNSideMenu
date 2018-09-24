@@ -13,7 +13,7 @@ import ObjectiveC
 internal let screenHeight = UIScreen.main.bounds.height
 internal let screenWidth = UIScreen.main.bounds.width
 internal var kNavBarHeight: CGFloat {
-    return UIApplication.shared.statusBarFrame.height + ([.landscapeRight, .landscapeLeft].contains(UIApplication.shared.statusBarOrientation) ? 32 : 44)
+    return UIApplication.shared.statusBarFrame.size.height + ([.landscapeRight, .landscapeLeft].contains(UIApplication.shared.statusBarOrientation) ? 32 : 44)
 }
 internal let kDistanceItemToRight: CGFloat = 18
 

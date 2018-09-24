@@ -14,7 +14,7 @@ class NextViewController: UIViewController {
     super.viewDidLoad()
     
     // Do any additional setup after loading the view.
-    sideMenuManager?.instance()?.menu?.disabled = true
+//    sideMenuManager?.instance()?.menu?.disabled = false
   }
   
   override func viewWillAppear(_ animated: Bool) {

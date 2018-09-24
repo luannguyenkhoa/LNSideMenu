@@ -15,16 +15,16 @@ public final class LNPanelViewController: UIViewController {
   fileprivate var didInit = false
   weak var delegate: LNSMDelegate?
   var position: Position = .left
-  var isNavigationBarChanged = false {
+  var isTranslucent = false {
     didSet {
       updateFrame()
     }
   }
   // MARK: Colors
-  open var menuBgColor = LNColor.bgView.color
-  open var itemBgColor = LNColor.bgItem.color
-  open var highlightColor = LNColor.highlight.color
-  open var titleColor = LNColor.title.color
+  public var menuBgColor = LNColor.bgView.color
+  public var itemBgColor = LNColor.bgItem.color
+  public var highlightColor = LNColor.highlight.color
+  public var titleColor = LNColor.title.color
   
   lazy var sideMenuView: LNSideMenuView = LNSideMenuView()
   
@@ -35,14 +35,14 @@ public final class LNPanelViewController: UIViewController {
     self.sideMenuView.indexOfDefaultCellHighlight = highlightCellAtIndex
   }
   
-  override open func viewDidLoad() {
+  override public func viewDidLoad() {
     super.viewDidLoad()
     
     self.view.backgroundColor = .clear
     self.view.autoresizingMask = [.flexibleHeight, .flexibleWidth]
   }
   
-  open override func viewWillAppear(_ animated: Bool) {
+  public override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     if !didInit {
       didInit = true
@@ -69,7 +69,7 @@ public final class LNPanelViewController: UIViewController {
   
   internal func setViewFrame() -> Bool {
     // Set frame for view
-    let distance: CGFloat = isNavigationBarChanged ? 0 : 64
+    let distance: CGFloat = isTranslucent ? 0 : 44 + UIApplication.shared.statusBarFrame.size.height
     if view.y != distance {
       view.y = distance
       view.height = screenHeight - view.y
@@ -81,7 +81,7 @@ public final class LNPanelViewController: UIViewController {
   internal func updateFrame() {
     // Just refresh side menu iff the view frame has already changed
     if setViewFrame() {
-      sideMenuView.refreshMenuWithFrame(view.frame, isChanged: isNavigationBarChanged)
+      sideMenuView.refreshMenuWithFrame(view.frame, translucent: isTranslucent)
     }
   }
   

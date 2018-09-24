@@ -35,7 +35,7 @@ public final class LNSideMenu: NSObject {
    If the content view's navigation bar is hidden or translucent, you should assign a `true` value to this property. 
    Otherwise, `false` value is that to moving down the default menu under navigation bar.
    */
-  open var isNavbarHiddenOrTransparent = false {
+  public var isNavbarHiddenOrTransparent = false {
     didSet {
       // Refresh side menu whenever this property is set a new value
       refreshSideMenu()
@@ -46,39 +46,35 @@ public final class LNSideMenu: NSObject {
    This property won't work for the default menu. 
    Check ``isNavbarHiddenOrTransparent`` out if you're planning to use the default menu.
    */
-  open var underNavigationBar: Bool = false
+  public var underNavigationBar: Bool = false
   
-  open weak var delegate: LNSideMenuDelegate?
-  open var allowLeftSwipe = true
-  open var allowRightSwipe = true
-  open var allowPanGesture = true
-  open var animationDuration = 0.5
-  open var hideWhenDidSelectOnCell = true
-  open var items = [String]()
+  public weak var delegate: LNSideMenuDelegate?
+  public var allowLeftSwipe = true
+  public var allowRightSwipe = true
+  public var allowPanGesture = true
+  public var animationDuration = 0.5
+  public var hideWhenDidSelectOnCell = true
+  public var items = [String]()
   // uidynamic behavior, set false to disable it
-  open var enableDynamic: Bool = false {
+  public var enableDynamic: Bool = false {
     didSet {
       cacheEnableDynamic = enableDynamic
     }
   }
 
-  open var tapOutsideToDismiss = true
-  open var disabled: Bool = false {
-    didSet {
-      print("Reset Flag")
-    }
-  }
-  open var enableAnimation: Bool = true
-  open var customMenu: UIViewController?
-  open var isCustomMenu: Bool {
+  public var tapOutsideToDismiss = true
+  public var disabled: Bool = false
+  public var enableAnimation: Bool = true
+  public var customMenu: UIViewController?
+  public var isCustomMenu: Bool {
     return customMenu != nil
   }
   
   // MARK: Private properties
-  fileprivate(set) open var isMenuOpen: Bool = false
-  fileprivate(set) open var position: Position = .left
+  fileprivate(set) public var isMenuOpen: Bool = false
+  fileprivate(set) public var position: Position = .left
   fileprivate let sideMenuContainerView = UIView()
-  fileprivate(set) open var menuViewController: LNPanelViewController?
+  fileprivate(set) public var menuViewController: LNPanelViewController?
   fileprivate var sourceView: UIView!
   fileprivate var needUpdateAppearance = false
   fileprivate var panGesture: UIPanGestureRecognizer?
@@ -256,7 +252,8 @@ public final class LNSideMenu: NSObject {
       gesture.setTranslation(.zero, in: sourceView)
 
     default:
-      if gesture.velocity(in: gesture.view).x == 0 {
+      let velX = gesture.velocity(in: gesture.view).x
+      if velX == 0 {
         if (position == .left && sideMenuContainerView.x == -menuWidth)
           || (position == .right && sideMenuContainerView.x == menuWidth) {
           return
@@ -429,13 +426,18 @@ public final class LNSideMenu: NSObject {
     if !show {
       centerx = position == .left ? -sourceView.width/2 : sourceView.width + sourceView.width/2
     }
-    isMenuOpen = show
-    show ? delegate?.sideMenuWillOpen?() : delegate?.sideMenuWillClose?()
+    let stateChanged = show != isMenuOpen
+    if stateChanged {
+      show ? delegate?.sideMenuWillOpen?() : delegate?.sideMenuWillClose?()
+      isMenuOpen = show
+    }
     UIView.animate(withDuration: animationDuration, animations: {
       self.sideMenuContainerView.center.x = centerx
     }) { _ in
       self.animationCompleted = true
-      show ? self.delegate?.sideMenuDidOpen?() : self.delegate?.sideMenuDidClose?()
+      if stateChanged {
+        show ? self.delegate?.sideMenuDidOpen?() : self.delegate?.sideMenuDidClose?()
+      }
     }
     // Starting show/hide blur view animation
     animateBlurview(isShow: show)
@@ -449,21 +451,21 @@ public final class LNSideMenu: NSObject {
     }
   }
   
-  open func toggleMenu(completion: Completion? = nil) {
+  public func toggleMenu(completion: Completion? = nil) {
     // Revert boucingEnabled default value, because it might be changed by gesture handlers
     cacheEnableDynamic = isMenuOpen ? false : enableDynamic
     toggleMenu(!isMenuOpen, completion: completion)
     if !isMenuOpen { updateSideMenuApperanceIfNeeded() }
   }
   
-  open func hideSideMenu(_ completion: Completion? = nil) {
+  public func hideSideMenu(_ completion: Completion? = nil) {
     // disable dynamic animator when hiding sidemenu
     cacheEnableDynamic = false
     // Just only hide sidemenu if it was really shown
     if isMenuOpen { toggleMenu(false, completion: completion) }
   }
   
-  open func showSideMenu(completion: Completion? = nil) {
+  public func showSideMenu(completion: Completion? = nil) {
     // Revert boucingEnabled default value, because it might be changed by gesture handlers
     cacheEnableDynamic = enableDynamic
     // Just only show sidemenu if it was really hidden
@@ -472,7 +474,7 @@ public final class LNSideMenu: NSObject {
   
   // MARK: Frame and refresh content
   
-  open func refreshMenu(_ items: [String]) {
+  public func refreshMenu(_ items: [String]) {
     // Refresh side menu with a new list items
     self.items = items
     if !isCustomMenu {
@@ -503,7 +505,7 @@ public final class LNSideMenu: NSObject {
     updateFrame()
     // Handle navigation bar translucent if needed
     if !isCustomMenu {
-      menuViewController?.isNavigationBarChanged = isNavbarHiddenOrTransparent
+      menuViewController?.isTranslucent = isNavbarHiddenOrTransparent
     }
   }
   
@@ -563,7 +565,6 @@ extension LNSideMenu: UIDynamicAnimatorDelegate {
 extension LNSideMenu: UIGestureRecognizerDelegate {
 
   public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-    print("completed: \(animationCompleted)")
     // Disable gesture if dynamic animator has not ended animation yet
     if !dynamicAnimatorEnded {
       return false
