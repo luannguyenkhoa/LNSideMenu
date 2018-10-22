@@ -17,10 +17,10 @@ class SMNavigationController: LNSideMenuNavigationController {
     
     // Do any additional setup after loading the view.
     // Using default side menu
-    items = ["All","Hot Food","Sandwiches","Hot Pots","Hot Rolls", "Salads","Pies","Dessrts","Drinks","Breakfast","Cookies","Lunch fers"]
-    initialSideMenu(.left)
+    items = ["All","Hot Food","Sandwiches","Hot Pots","Hot Rolls", "Salads","Pies","Dessrts","Drinks","Breakfast","Cookies","Lunch fers","Lunch fers","Lunch fers","Lunch fers","Lunch fers","Lunch fers","Lunch fers","Lunch fers","Lunch fers"]
+//    initialSideMenu(.left)
     // Custom side menu
-//    initialCustomMenu(pos: .left)
+    initialCustomMenu(pos: .left)
   }
   
   override func didReceiveMemoryWarning() {
@@ -33,17 +33,17 @@ class SMNavigationController: LNSideMenuNavigationController {
     menu?.menuViewController?.menuBgColor = UIColor.black.withAlphaComponent(0.85)
     menu?.delegate = self
     menu?.underNavigationBar = true
-    view.bringSubview(toFront: navigationBar)
+    view.bringSubviewToFront(navigationBar)
   }
   
   fileprivate func initialCustomMenu(pos position: Position) {
     let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "LeftMenuTableViewController") as! LeftMenuTableViewController
     vc.delegate = self
-    menu = LNSideMenu(navigation: self, menuPosition: position, customSideMenu: vc)
+    menu = LNSideMenu(navigation: self, menuPosition: position, customSideMenu: vc, size: .custom(UIScreen.main.bounds.width - 15))
     menu?.delegate = self
     menu?.enableDynamic = true
     // Moving down the menu view under navigation bar
-    menu?.underNavigationBar = true
+//    menu?.underNavigationBar = true
   }
   
   fileprivate func setContentVC(_ index: Int) {

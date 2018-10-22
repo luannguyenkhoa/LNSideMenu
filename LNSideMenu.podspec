@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'LNSideMenu'
-  s.version          = '3.4'
+  s.version          = '3.4.1'
   s.summary          = 'A side menu control for iOS in Swift with custom layer and scrolling effect. Right and Left sides. iOS 8+.'
 
 # This description is used to generate tags and improve search results.
@@ -19,7 +19,7 @@ Pod::Spec.new do |s|
 
   s.description      = <<-DESC
     Based on the side menu libraries that have already published on github, this side menu have a little bit custom the layer and scrolling effect.
-                       DESC
+                          DESC
 
   s.homepage         = 'https://github.com/luannguyenkhoa/LNSideMenu'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
@@ -31,11 +31,11 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '8.0'
   s.requires_arc = true
   s.source_files = 'LNSideMenu/Classes/**/*'
-  
+
   # s.resource_bundles = {
   #   'LNSideMenu' => ['LNSideMenu/Assets/*.png']
   # }
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
+  # s.frameworks = 'UIKit'
 end

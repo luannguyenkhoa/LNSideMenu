@@ -133,7 +133,7 @@ public final class LNSideMenu: NSObject {
   }
   
   // Initial swipe gesture with specific direction
-  fileprivate func initialSwipeGesture(_ direction: UISwipeGestureRecognizerDirection) -> UISwipeGestureRecognizer {
+  fileprivate func initialSwipeGesture(_ direction: UISwipeGestureRecognizer.Direction) -> UISwipeGestureRecognizer {
     // Initial swipe gesture recognizer with inputting direction
     /*
      UISwipeGestureRecognizer is a concrete subclass of UIGestureRecognizer that looks for swiping gestures in one or more directions. 
@@ -406,7 +406,7 @@ public final class LNSideMenu: NSObject {
      A push behavior applies a continuous or instantaneous force to one or more dynamic items, causing those items to change position accordingly.
      For more details: https://developer.apple.com/reference/uikit/uipushbehavior
      */
-    let pushBehavior = UIPushBehavior(items: [sideMenuContainerView], mode: UIPushBehaviorMode.instantaneous)
+    let pushBehavior = UIPushBehavior(items: [sideMenuContainerView], mode: UIPushBehavior.Mode.instantaneous)
     pushBehavior.magnitude = pushMagnitude
     animator.addBehavior(pushBehavior)
     

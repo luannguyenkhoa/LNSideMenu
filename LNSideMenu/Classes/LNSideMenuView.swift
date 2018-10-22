@@ -114,7 +114,7 @@ internal final class LNSideMenuView: UIView, UIScrollViewDelegate {
     
     // Add self to parent view
     sourceView.addSubview |> self
-    sourceView.bringSubview(toFront:) |> self
+    sourceView.bringSubviewToFront |> self
     
   }
   
