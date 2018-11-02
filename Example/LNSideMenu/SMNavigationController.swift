@@ -39,7 +39,7 @@ class SMNavigationController: LNSideMenuNavigationController {
   fileprivate func initialCustomMenu(pos position: Position) {
     let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "LeftMenuTableViewController") as! LeftMenuTableViewController
     vc.delegate = self
-    menu = LNSideMenu(navigation: self, menuPosition: position, customSideMenu: vc, size: .custom(UIScreen.main.bounds.width - 15))
+    menu = LNSideMenu(navigation: self, menuPosition: position, customSideMenu: vc, size: .half)
     menu?.delegate = self
     menu?.enableDynamic = true
     // Moving down the menu view under navigation bar

@@ -52,6 +52,16 @@
                ReferencedContainer = "container:LNSideMenu.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "B37BE509218B14C400B66A05"
+               BuildableName = "LNSideMenuTests.xctest"
+               BlueprintName = "LNSideMenuTests"
+               ReferencedContainer = "container:LNSideMenu.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference

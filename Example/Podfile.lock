@@ -1,5 +1,5 @@
 PODS:
-  - LNSideMenu (3.4.1)
+  - LNSideMenu (3.4.3)
 
 DEPENDENCIES:
   - LNSideMenu (from `../`)
@@ -9,8 +9,8 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  LNSideMenu: 67528792a64f5da5d3ea174c2d97a0f82fbaf6d5
+  LNSideMenu: 96c74814cc19b334b0a85b3c0cdb919548bf2026
 
 PODFILE CHECKSUM: b7bb8c8aacf503ad689de416c3fcf671ced7c4c8
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.6.0.beta.2

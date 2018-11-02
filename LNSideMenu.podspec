@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'LNSideMenu'
-  s.version          = '3.4.1'
+  s.version          = '3.4.2'
   s.summary          = 'A side menu control for iOS in Swift with custom layer and scrolling effect. Right and Left sides. iOS 8+.'
 
 # This description is used to generate tags and improve search results.
@@ -31,7 +31,6 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '8.0'
   s.requires_arc = true
   s.source_files = 'LNSideMenu/Classes/**/*'
-
   # s.resource_bundles = {
   #   'LNSideMenu' => ['LNSideMenu/Assets/*.png']
   # }
