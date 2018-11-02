@@ -357,7 +357,8 @@ public final class LNSideMenu: NSObject {
       alpha = 0...1 ~= alpha ? alpha : alpha < 0 ? 0 : 1
     }
     // Animating show/hide blur view by alpha
-    UIView.animate(withDuration: animationDuration) {
+    let duration = isShow ? animationDuration : 0.05
+    UIView.animate(withDuration: duration) {
       self.blurView.alpha = alpha
     }
   }

@@ -53,7 +53,7 @@
 		B3E9A6431DA556BF0006023F /* MenuTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MenuTableViewCell.xib; sourceTree = "<group>"; };
 		B3F17C611D52DCF200A44CE3 /* ContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentViewController.swift; sourceTree = "<group>"; };
 		BFB584EA3CAADB61A9210B7F /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
-		C024FA70B77AE5A80929D57A /* LNSideMenu.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LNSideMenu.podspec; path = ../LNSideMenu.podspec; sourceTree = "<group>"; };
+		C024FA70B77AE5A80929D57A /* LNSideMenu.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LNSideMenu.podspec; path = ../LNSideMenu.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		D03DB41E9DF1D5047D01EDF0 /* Pods-LNSideMenu_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LNSideMenu_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-LNSideMenu_Example/Pods-LNSideMenu_Example.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
