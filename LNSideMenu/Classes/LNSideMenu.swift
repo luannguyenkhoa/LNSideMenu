@@ -55,6 +55,7 @@ public final class LNSideMenu: NSObject {
   public var animationDuration = 0.5
   public var hideWhenDidSelectOnCell = true
   public var items = [String]()
+  public var blurColor = UIColor.gray.withAlphaComponent(0.5)
   // uidynamic behavior, set false to disable it
   public var enableDynamic: Bool = false {
     didSet {
@@ -92,15 +93,18 @@ public final class LNSideMenu: NSObject {
   fileprivate lazy var blurView: UIView = {
     return self.initialBlurView()
   }()
-  fileprivate var navController: UINavigationController?
-  
   
   // MARK: Initialize
   
-  fileprivate init(sourceView source: UIView, position: Position) {
+  fileprivate init(sourceView source: UIView, position: Position, isBlur: Bool = false) {
     super.init()
     sourceView = source
     self.position = position
+    
+    /// Adding blur if needed
+    if isBlur {
+      source.addSubview(blurView)
+    }
     
     /*
      A dynamic animator provides physics-related capabilities and animations for its dynamic items, and provides the context for those animations. 
@@ -172,10 +176,9 @@ public final class LNSideMenu: NSObject {
   
   // Initialize side menu without using default menu, using your own custom sidemenu instead
   public convenience init(navigation nav: UINavigationController, menuPosition: Position, customSideMenu: UIViewController, size: LNSize = .twothird) {
-    self.init(sourceView: nav.view, position: menuPosition)
+    self.init(sourceView: nav.view, position: menuPosition, isBlur: true)
     // Keep references
     customMenu = customSideMenu
-    navController = nav
     
     // Config custom menu view
     customMenu?.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -193,9 +196,8 @@ public final class LNSideMenu: NSObject {
   fileprivate func initialBlurView() -> UIView {
     // Add blur view for custom sidemenu
     let blurView = UIView(frame: sideMenuContainerView.bounds)
-    blurView.backgroundColor = UIColor.gray.withAlphaComponent(0.5)
+    blurView.backgroundColor = blurColor
     blurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-    navController?.navigationBar.addSubview(blurView)
     return blurView
   }
   
@@ -492,7 +494,7 @@ public final class LNSideMenu: NSObject {
       , y: ypos, width: width, height: height)
     // Update blur view y position
     if isCustomMenu {
-      blurView.y = ypos - 20
+      blurView.frame = CGRect(x: 0, y: ypos - 20, width: sideMenuContainerView.width, height: sideMenuContainerView.height + abs(ypos - 20))
     }
   }
   
