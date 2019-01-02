@@ -10,7 +10,7 @@ import UIKit
 
 public struct LNSideMenuManagement: LNSideMenuManager {
   
-  var viewController: UIViewController?
+  weak var viewController: UIViewController?
   public init() {}
   public init(viewController: UIViewController) {
     self.viewController = viewController
