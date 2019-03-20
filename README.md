@@ -1,11 +1,6 @@
 # LNSideMenu
 
-[![CI Status](http://img.shields.io/travis/Luan Nguyen/LNSideMenu.svg?style=flat)](https://travis-ci.org/Luan Nguyen/LNSideMenu)
-[![Version](https://img.shields.io/cocoapods/v/LNSideMenu.svg?style=flat)](http://cocoapods.org/pods/LNSideMenu)
-[![License](https://img.shields.io/cocoapods/l/LNSideMenu.svg?style=flat)](http://cocoapods.org/pods/LNSideMenu)
-[![Platform](https://img.shields.io/cocoapods/p/LNSideMenu.svg?style=flat)](http://cocoapods.org/pods/LNSideMenu)
-
-This one is basically similiar to a lot of ones on Github for iOS, but besides of must-have features, it supilies an interesting one focusing on effects and animations like scrolling effect, faded animation for the appearance of the menu's items,..
+This lib is basically similiar to a lot of existing ones in Github for iOS, but besides of must-have features, it supilies an interesting one focusing on effects and animations like scrolling effect, faded animation for the appearance of the menu's items,..
 Let's explore and enjoy it.
 
 ![Demo](https://cloud.githubusercontent.com/assets/13121441/19177073/0ca0ce0e-8c70-11e6-9e12-d67e7947d98d.gif)
@@ -31,21 +26,21 @@ func initialSideMenu(_ position: Position) {
 
 ```swift
 func didSelectItemAtIndex(index: Int) {
-// TODO: Get your destViewController here
-self.setContentViewController(destViewController)
+    // TODO: Get your destViewController here
+    self.setContentViewController(destViewController)
 }
 ```
 
 . Toggle menu:
 
 ```swift
-self.sideMenuManager?.toggleSideMenuView()
+sideMenuManager?.toggle()
 ```
 
 . Making navigation bar translucent by adding these code as following:
 ```swift
 self.navigationBarTranslucentStyle()
-sideMenuManager?.sideMenuController()?.sideMenu?.isNavbarHiddenOrTransparent = true
+sideMenuManager?.instance()?.menu?.isNavbarHiddenOrTransparent = true
 ```
 
 . Digging up `Example` to get a comprehensive view. 
